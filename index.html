@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Òjà — the market</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../shared/css/style.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-market">
+        <div class="container">
+
+            <a class="brand-mark" href="index.html">Ò<span>j</span>à</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent"
+                aria-label="Toggle navigation">
+                <span class="toggler-bar"></span>
+                <span class="toggler-bar"></span>
+                <span class="toggler-bar"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navContent">
+
+                <div class="search-pill mx-md-auto my-3 my-md-0">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="7" cy="7" r="5.5" stroke="#6B7178" stroke-width="1.4" />
+                        <path d="M11.2 11.2L14.5 14.5" stroke="#6B7178" stroke-width="1.4" stroke-linecap="round" />
+                    </svg>
+                    <input type="text" placeholder="Search the market...">
+                </div>
+
+                <div class="d-flex align-items-center gap-4 justify-content-between justify-content-md-end">
+                    <a href="#" class="nav-icon-btn" aria-label="Cart">
+                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 6.5H18L17 16.5C16.9 17.6 16 18.4 14.9 18.4H7.1C6 18.4 5.1 17.6 5 16.5L4 6.5Z"
+                                stroke="#F6F1E7" stroke-width="1.4" stroke-linejoin="round" />
+                            <path d="M7.5 6.5V5.2C7.5 3.4 9 2 10.7 2H11.3C13 2 14.5 3.4 14.5 5.2V6.5" stroke="#F6F1E7"
+                                stroke-width="1.4" />
+                        </svg>
+                        <span class="cart-badge">3</span>
+                    </a>
+                    <a href="#" class="btn-signin">Sign in</a>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- Category pills -->
+    <div class="category-row">
+        <div class="container">
+            <div class="category-scroll">
+                <a href="#" class="pill pill-active">Fashion</a>
+                <a href="#" class="pill">Phones &amp; Tablets</a>
+                <a href="#" class="pill">Electronics</a>
+                <a href="#" class="pill">Home &amp; Living</a>
+                <a href="#" class="pill">Beauty</a>
+                <a href="#" class="pill">Bags &amp; Shoes</a>
+                <a href="#" class="pill">Groceries</a>
+                <a href="#" class="pill">Kids</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="row align-items-center gy-5">
+
+                <div class="col-md-7">
+                    <p class="eyebrow">One seller. No middlemen.</p>
+                    <h1 class="hero-heading">Buy directly from<br>the seller — no <span>wahala</span>.</h1>
+                    <p class="hero-sub">One seller, real stock, and a receipt generated the moment your order is
+                        approved — not after.</p>
+                    <div class="hero-cta">
+                        <a href="#" class="btn-primary-market">See what's in stock</a>
+                        <a href="#" class="link-underline">Browse categories &rarr;</a>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="receipt-card">
+                        <p class="receipt-brand">ÒJÀ</p>
+                        <p class="receipt-meta">RECEIPT NO. 00482 · TODAY</p>
+                        <div class="receipt-rule"></div>
+                        <div class="receipt-line"><span>1x Ankara Print Shirt</span><span>₦8,500</span></div>
+                        <div class="receipt-line"><span>1x Leather Sandals</span><span>₦12,000</span></div>
+                        <div class="receipt-line"><span>Delivery</span><span>₦1,500</span></div>
+                        <div class="receipt-rule"></div>
+                        <div class="receipt-line receipt-total"><span>TOTAL</span><span>₦22,000</span></div>
+                        <p class="receipt-footer">Generated automatically on payment confirmation.</p>
+                        <span class="receipt-stamp">Approved</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <div class="torn-edge"></div>
+
+    <!-- Products -->
+    <section class="products">
+        <div class="container">
+            <div class="section-head">
+                <h2 class="section-heading">Today's Stock</h2>
+                <p class="section-sub">128 items available right now</p>
+            </div>
+            <div class="product-grid">
+                <article class="product-card">
+                    <div class="product-image" style="background-color:#E7DCC3;">
+                        <span class="product-image-label">Ankara Shirt</span>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-title">Men's Ankara Print Shirt</p>
+                        <div class="product-price-row">
+                            <span class="product-price">&#8358;8,500</span>
+                            <span class="product-price-original">&#8358;12,000</span>
+                            <span class="discount-tag">-29%</span>
+                        </div>
+                        <p class="product-stock"><span class="stock-dot"></span>14 in stock</p>
+                        <a href="#" class="btn-order">Order Now</a>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image" style="background-color:#D9E3D0;">
+                        <span class="product-image-label">Leather Sandals</span>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-title">Leather Sandals</p>
+                        <div class="product-price-row">
+                            <span class="product-price">&#8358;6,000</span>
+                        </div>
+                        <p class="product-stock"><span class="stock-dot"></span>27 in stock</p>
+                        <a href="#" class="btn-order">Order Now</a>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image" style="background-color:#EFDCE0;">
+                        <span class="product-image-label">Wireless Earbuds</span>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-title">Wireless Earbuds</p>
+                        <div class="product-price-row">
+                            <span class="product-price">&#8358;9,200</span>
+                            <span class="product-price-original">&#8358;13,000</span>
+                            <span class="discount-tag">-29%</span>
+                        </div>
+                        <p class="product-stock"><span class="stock-dot"></span>9 in stock</p>
+                        <a href="#" class="btn-order">Order Now</a>
+                    </div>
+                </article>
+
+                <article class="product-card sold-out">
+                    <span class="sold-out-tag">Sold out</span>
+                    <div class="product-image" style="background-color:#DCE6EF;">
+                        <span class="product-image-label">Wristwatch</span>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-title">Classic Wristwatch</p>
+                        <div class="product-price-row">
+                            <span class="product-price">&#8358;15,000</span>
+                        </div>
+                        <p class="product-stock out-of-stock">Currently unavailable</p>
+                        <a href="#" class="btn-order">Order Now</a>
+                    </div>
+                </article>
+
+
+                <article class="product-card">
+                    <div class="product-image" style="background-color:#E3D5E8;">
+                        <span class="product-image-label">Handbag</span>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-title">Ladies Handbag</p>
+                        <div class="product-price-row">
+                            <span class="product-price">&#8358;11,000</span>
+                            <span class="product-price-original">&#8358;15,500</span>
+                            <span class="discount-tag">-29%</span>
+                        </div>
+                        <p class="product-stock"><span class="stock-dot"></span>6 in stock</p>
+                        <a href="#" class="btn-order">Order Now</a>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image" style="background-color:#D6E0E3;">
+                        <span class="product-image-label">Speaker</span>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-title">Bluetooth Speaker</p>
+                        <div class="product-price-row">
+                            <span class="product-price">&#8358;13,500</span>
+                        </div>
+                        <p class="product-stock"><span class="stock-dot"></span>11 in stock</p>
+                        <a href="#" class="btn-order">Order Now</a>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image" style="background-color:#E9DFC8;">
+                        <span class="product-image-label">Sneakers</span>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-title">Men's Sneakers</p>
+                        <div class="product-price-row">
+                            <span class="product-price">&#8358;10,200</span>
+                            <span class="product-price-original">&#8358;14,000</span>
+                            <span class="discount-tag">-27%</span>
+                        </div>
+                        <p class="product-stock"><span class="stock-dot"></span>18 in stock</p>
+                        <a href="#" class="btn-order">Order Now</a>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image" style="background-color:#DDE5D1;">
+                        <span class="product-image-label">Blender</span>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-title">Kitchen Blender</p>
+                        <div class="product-price-row">
+                            <span class="product-price">&#8358;17,800</span>
+                        </div>
+                        <p class="product-stock"><span class="stock-dot"></span>4 in stock</p>
+                        <a href="#" class="btn-order">Order Now</a>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image" style="background-color:#E3D5E8;">
+                        <span class="product-image-label">Handbag</span>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-title">Ladies Handbag</p>
+                        <div class="product-price-row">
+                            <span class="product-price">&#8358;11,000</span>
+                            <span class="product-price-original">&#8358;15,500</span>
+                            <span class="discount-tag">-29%</span>
+                        </div>
+                        <p class="product-stock"><span class="stock-dot"></span>6 in stock</p>
+                        <a href="#" class="btn-order">Order Now</a>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image" style="background-color:#D6E0E3;">
+                        <span class="product-image-label">Speaker</span>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-title">Bluetooth Speaker</p>
+                        <div class="product-price-row">
+                            <span class="product-price">&#8358;13,500</span>
+                        </div>
+                        <p class="product-stock"><span class="stock-dot"></span>11 in stock</p>
+                        <a href="#" class="btn-order">Order Now</a>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image" style="background-color:#E9DFC8;">
+                        <span class="product-image-label">Sneakers</span>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-title">Men's Sneakers</p>
+                        <div class="product-price-row">
+                            <span class="product-price">&#8358;10,200</span>
+                            <span class="product-price-original">&#8358;14,000</span>
+                            <span class="discount-tag">-27%</span>
+                        </div>
+                        <p class="product-stock"><span class="stock-dot"></span>18 in stock</p>
+                        <a href="#" class="btn-order">Order Now</a>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image" style="background-color:#DDE5D1;">
+                        <span class="product-image-label">Blender</span>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-title">Kitchen Blender</p>
+                        <div class="product-price-row">
+                            <span class="product-price">&#8358;17,800</span>
+                        </div>
+                        <p class="product-stock"><span class="stock-dot"></span>4 in stock</p>
+                        <a href="#" class="btn-order">Order Now</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <p class="brand-mark footer-brand-mark">Ò<span>j</span>à</p>
+                    <p class="footer-tagline">One seller. Real stock. No wahala.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <p class="footer-col-title">Shop</p>
+                        <a href="#">Fashion</a>
+                        <a href="#">Electronics</a>
+                        <a href="#">Beauty</a>
+                        <a href="#">Home &amp; Living</a>
+                    </div>
+                    <div class="footer-col">
+                        <p class="footer-col-title">Help</p>
+                        <a href="#">How it works</a>
+                        <a href="#">Delivery</a>
+                        <a href="#">Track an order</a>
+                        <a href="#">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copy">&copy; 2026 Òjà. All rights reserved.</p>
+                <p class="footer-credit">Built in Ogbomoso, Nigeria.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
