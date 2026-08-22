@@ -654,7 +654,6 @@ a {
     }
 }
 
-
 /* Auth pages (sign up / sign in) */
 
 .auth-header {
@@ -1109,14 +1108,13 @@ a {
     color: #C1440E;
 }
 
-.table-action:hover {
-    text-decoration: underline;
-}
-
 .table-action.approve {
     color: #3A6B35;
 }
 
+.table-action:hover {
+    text-decoration: underline;
+}
 
 /* Product detail page */
 
@@ -1373,31 +1371,5 @@ a {
     .cart-item-image {
         width: 60px;
         height: 60px;
-    }
-}
-
-.table-action:hover {
-    text-decoration: underline;
-}
-
-/* Responsive: Footer */
-
-@media (max-width: 480px) {
-    .footer-links {
-        gap: 32px;
-    }
-
-    .footer-bottom {
-        flex-direction: column;
-        gap: 4px;
-    }
-}
-
-/* Responsive: Products */
-
-@media (max-width: 480px) {
-    .product-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
     }
 }
