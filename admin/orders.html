@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders — Òjà Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../shared/css/style.css">
+</head>
+
+<body>
+
+    <div class="admin-shell">
+
+        <!-- Admin sidebar -->
+        <aside class="admin-sidebar">
+            <a class="brand-mark admin-brand" href="dashboard.html">Ò<span>j</span>à</a>
+            <nav class="admin-nav">
+                <a href="dashboard.html" class="admin-nav-item">Dashboard</a>
+                <a href="add-product.html" class="admin-nav-item">Add product</a>
+                <a href="products.html" class="admin-nav-item">Products</a>
+                <a href="orders.html" class="admin-nav-item active">Orders</a>
+            </nav>
+        </aside>
+
+        <!-- Admin main -->
+        <main class="admin-main">
+            <p class="admin-title">Orders</p>
+
+            <div class="products-table-wrap">
+                <table class="products-table">
+                    <tr>
+                        <th>Order</th>
+                        <th>Customer</th>
+                        <th>Item</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+
+                    <tr>
+                        <td>#0481</td>
+                        <td>Aisha B.</td>
+                        <td>Ankara Print Shirt</td>
+                        <td>&#8358;8,500</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>
+                            <a href="#" class="table-action approve">Approve</a>
+                            <a href="#" class="table-action">View</a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>#0480</td>
+                        <td>Tunde O.</td>
+                        <td>Wireless Earbuds</td>
+                        <td>&#8358;9,200</td>
+                        <td><span class="status-badge status-approved">Approved</span></td>
+                        <td>
+                            <a href="#" class="table-action">View receipt</a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>#0479</td>
+                        <td>Fatima K.</td>
+                        <td>Leather Sandals</td>
+                        <td>&#8358;6,000</td>
+                        <td><span class="status-badge status-approved">Approved</span></td>
+                        <td>
+                            <a href="#" class="table-action">View receipt</a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>#0478</td>
+                        <td>Chidi E.</td>
+                        <td>Ladies Handbag</td>
+                        <td>&#8358;11,000</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>
+                            <a href="#" class="table-action approve">Approve</a>
+                            <a href="#" class="table-action">View</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add a product — Òjà Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../shared/css/style.css">
+</head>
+
+<body>
+
+    <div class="admin-shell">
+
+        <!-- Admin sidebar -->
+        <aside class="admin-sidebar">
+            <a class="brand-mark admin-brand" href="dashboard.html">Ò<span>j</span>à</a>
+            <nav class="admin-nav">
+                <a href="dashboard.html" class="admin-nav-item">Dashboard</a>
+                <a href="add-product.html" class="admin-nav-item active">Add product</a>
+                <a href="products.html" class="admin-nav-item">Products</a>
+                <a href="orders.html" class="admin-nav-item">Orders</a>
+            </nav>
+        </aside>
+
+        <!-- Admin main -->
+        <main class="admin-main">
+            <p class="admin-title">Add a product</p>
+
+            <form class="product-form">
+
+                <label class="dropzone" for="productPhoto">
+                    <span>Drop a product photo here, or click to upload</span>
+                    <input type="file" id="productPhoto" accept="image/*" hidden>
+                </label>
+
+                <div class="form-group">
+                    <label class="form-label" for="productName">Product name</label>
+                    <input class="form-input" type="text" id="productName" placeholder="e.g. Ankara Print Shirt">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="category">Category</label>
+                        <select class="form-select" id="category">
+                            <option>Fashion</option>
+                            <option>Phones &amp; Tablets</option>
+                            <option>Electronics</option>
+                            <option>Home &amp; Living</option>
+                            <option>Beauty</option>
+                            <option>Bags &amp; Shoes</option>
+                            <option>Groceries</option>
+                            <option>Kids</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="quantity">Quantity</label>
+                        <input class="form-input" type="number" id="quantity" placeholder="20" min="0">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="price">Price</label>
+                        <input class="form-input" type="text" id="price" placeholder="&#8358;12,000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="discountPrice">Discounted price (optional)</label>
+                        <input class="form-input" type="text" id="discountPrice" placeholder="&#8358;8,500">
+                    </div>
+                </div>
+
+                <button class="btn-save btn-save-inline" type="button">Save product</button>
+
+            </form>
+        </main>
+
+    </div>
+
+</body>
+
+</html>
