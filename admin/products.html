@@ -11,6 +11,7 @@
         href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../shared/css/style.css">
+
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -39,121 +40,82 @@
 
             <div class="products-table-wrap">
                 <table class="products-table">
-                    <tr>
-                        <th>Item</th>
-                        <th>Price</th>
-                        <th>Stock</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <div class="table-item">
-                                <span class="table-swatch" style="background-color:#E7DCC3;"></span>
-                                Ankara Print Shirt
-                            </div>
-                        </td>
-                        <td>&#8358;8,500</td>
-                        <td>14</td>
-                        <td><span class="status-badge status-in">In stock</span></td>
-                        <td>
-                            <a href="#" class="table-action">View</a>
-                            <a href="#" class="table-action">Archive</a>
-                            <a href="#" class="table-action danger">Delete</a>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <div class="table-item">
-                                <span class="table-swatch" style="background-color:#D9E3D0;"></span>
-                                Leather Sandals
-                            </div>
-                        </td>
-                        <td>&#8358;6,000</td>
-                        <td>27</td>
-                        <td><span class="status-badge status-in">In stock</span></td>
-                        <td>
-                            <a href="#" class="table-action">View</a>
-                            <a href="#" class="table-action">Archive</a>
-                            <a href="#" class="table-action danger">Delete</a>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <div class="table-item">
-                                <span class="table-swatch" style="background-color:#EFDCE0;"></span>
-                                Wireless Earbuds
-                            </div>
-                        </td>
-                        <td>&#8358;9,200</td>
-                        <td>9</td>
-                        <td><span class="status-badge status-in">In stock</span></td>
-                        <td>
-                            <a href="#" class="table-action">View</a>
-                            <a href="#" class="table-action">Archive</a>
-                            <a href="#" class="table-action danger">Delete</a>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <div class="table-item">
-                                <span class="table-swatch" style="background-color:#DCE6EF;"></span>
-                                Classic Wristwatch
-                            </div>
-                        </td>
-                        <td>&#8358;15,000</td>
-                        <td>0</td>
-                        <td><span class="status-badge status-out">Sold out</span></td>
-                        <td>
-                            <a href="#" class="table-action">View</a>
-                            <a href="#" class="table-action">Archive</a>
-                            <a href="#" class="table-action danger">Delete</a>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <div class="table-item">
-                                <span class="table-swatch" style="background-color:#E3D5E8;"></span>
-                                Ladies Handbag
-                            </div>
-                        </td>
-                        <td>&#8358;11,000</td>
-                        <td>6</td>
-                        <td><span class="status-badge status-in">In stock</span></td>
-                        <td>
-                            <a href="#" class="table-action">View</a>
-                            <a href="#" class="table-action">Archive</a>
-                            <a href="#" class="table-action danger">Delete</a>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <div class="table-item">
-                                <span class="table-swatch" style="background-color:#D6E0E3;"></span>
-                                Bluetooth Speaker
-                            </div>
-                        </td>
-                        <td>&#8358;13,500</td>
-                        <td>11</td>
-                        <td><span class="status-badge status-in">In stock</span></td>
-                        <td>
-                            <a href="#" class="table-action">View</a>
-                            <a href="#" class="table-action">Archive</a>
-                            <a href="#" class="table-action danger">Delete</a>
-                        </td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                    </tbody>
                 </table>
             </div>
 
         </main>
 
     </div>
+
+    <script>
+        const tableBody = document.getElementById("productsTableBody");
+        const swatchColors = ["#E7DCC3", "#D9E3D0", "#EFDCE0", "#DCE6EF", "#E3D5E8", "#D6E0E3", "#E9DFC8", "#DDE5D1"];
+
+        function loadProducts() {
+            tableBody.innerHTML = "<tr><td colspan='5'>Loading...</td></tr>";
+
+            db.collection("products").orderBy("createdAt", "desc").get()
+                .then(function (snapshot) {
+                    tableBody.innerHTML = "";
+
+                    if (snapshot.empty) {
+                        tableBody.innerHTML = "<tr><td colspan='5'>No products yet.</td></tr>";
+                        return;
+                    }
+
+                    snapshot.docs.forEach(function (doc, index) {
+                        const product = doc.data();
+                        const isSoldOut = product.quantity <= 0;
+                        const color = swatchColors[index % swatchColors.length];
+                        const displayPrice = product.discountPrice || product.price;
+
+                        const row = document.createElement("tr");
+                        row.innerHTML =
+                            '<td><div class="table-item">' +
+                                '<span class="table-swatch" style="background-color:' + color + ';"></span>' +
+                                product.name +
+                            '</div></td>' +
+                            '<td>&#8358;' + displayPrice.toLocaleString() + '</td>' +
+                            '<td>' + product.quantity + '</td>' +
+                            '<td>' + (isSoldOut
+                                ? '<span class="status-badge status-out">Sold out</span>'
+                                : '<span class="status-badge status-in">In stock</span>') + '</td>' +
+                            '<td>' +
+                                '<a href="../store/product.html?id=' + doc.id + '" class="table-action" target="_blank">View</a>' +
+                                '<a href="#" class="table-action danger" data-id="' + doc.id + '">Delete</a>' +
+                            '</td>';
+
+                        tableBody.appendChild(row);
+                    });
+
+                    document.querySelectorAll(".table-action.danger").forEach(function (link) {
+                        link.addEventListener("click", function (event) {
+                            event.preventDefault();
+                            const id = link.getAttribute("data-id");
+                            if (confirm("Delete this product? This cannot be undone.")) {
+                                db.collection("products").doc(id).delete().then(loadProducts);
+                            }
+                        });
+                    });
+                })
+                .catch(function (error) {
+                    tableBody.innerHTML = "<tr><td colspan='5'>Could not load products.</td></tr>";
+                });
+        }
+
+        loadProducts();
+    </script>
 
 </body>
 

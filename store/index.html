@@ -12,6 +12,10 @@
         href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../shared/css/style.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="../shared/js/firebase-config.js"></script>
 </head>
 
 <body>
@@ -115,188 +119,7 @@
                 <h2 class="section-heading">Today's Stock</h2>
                 <p class="section-sub">128 items available right now</p>
             </div>
-            <div class="product-grid">
-                <article class="product-card">
-                    <div class="product-image" style="background-color:#E7DCC3;">
-                        <span class="product-image-label">Ankara Shirt</span>
-                    </div>
-                    <div class="product-body">
-                        <p class="product-title">Men's Ankara Print Shirt</p>
-                        <div class="product-price-row">
-                            <span class="product-price">&#8358;8,500</span>
-                            <span class="product-price-original">&#8358;12,000</span>
-                            <span class="discount-tag">-29%</span>
-                        </div>
-                        <p class="product-stock"><span class="stock-dot"></span>14 in stock</p>
-                        <a href="product.html" class="btn-order">Order Now</a>
-                    </div>
-                </article>
-
-                <article class="product-card">
-                    <div class="product-image" style="background-color:#D9E3D0;">
-                        <span class="product-image-label">Leather Sandals</span>
-                    </div>
-                    <div class="product-body">
-                        <p class="product-title">Leather Sandals</p>
-                        <div class="product-price-row">
-                            <span class="product-price">&#8358;6,000</span>
-                        </div>
-                        <p class="product-stock"><span class="stock-dot"></span>27 in stock</p>
-                        <a href="#" class="btn-order">Order Now</a>
-                    </div>
-                </article>
-
-                <article class="product-card">
-                    <div class="product-image" style="background-color:#EFDCE0;">
-                        <span class="product-image-label">Wireless Earbuds</span>
-                    </div>
-                    <div class="product-body">
-                        <p class="product-title">Wireless Earbuds</p>
-                        <div class="product-price-row">
-                            <span class="product-price">&#8358;9,200</span>
-                            <span class="product-price-original">&#8358;13,000</span>
-                            <span class="discount-tag">-29%</span>
-                        </div>
-                        <p class="product-stock"><span class="stock-dot"></span>9 in stock</p>
-                        <a href="#" class="btn-order">Order Now</a>
-                    </div>
-                </article>
-
-                <article class="product-card sold-out">
-                    <span class="sold-out-tag">Sold out</span>
-                    <div class="product-image" style="background-color:#DCE6EF;">
-                        <span class="product-image-label">Wristwatch</span>
-                    </div>
-                    <div class="product-body">
-                        <p class="product-title">Classic Wristwatch</p>
-                        <div class="product-price-row">
-                            <span class="product-price">&#8358;15,000</span>
-                        </div>
-                        <p class="product-stock out-of-stock">Currently unavailable</p>
-                        <a href="#" class="btn-order">Order Now</a>
-                    </div>
-                </article>
-
-
-                <article class="product-card">
-                    <div class="product-image" style="background-color:#E3D5E8;">
-                        <span class="product-image-label">Handbag</span>
-                    </div>
-                    <div class="product-body">
-                        <p class="product-title">Ladies Handbag</p>
-                        <div class="product-price-row">
-                            <span class="product-price">&#8358;11,000</span>
-                            <span class="product-price-original">&#8358;15,500</span>
-                            <span class="discount-tag">-29%</span>
-                        </div>
-                        <p class="product-stock"><span class="stock-dot"></span>6 in stock</p>
-                        <a href="#" class="btn-order">Order Now</a>
-                    </div>
-                </article>
-
-                <article class="product-card">
-                    <div class="product-image" style="background-color:#D6E0E3;">
-                        <span class="product-image-label">Speaker</span>
-                    </div>
-                    <div class="product-body">
-                        <p class="product-title">Bluetooth Speaker</p>
-                        <div class="product-price-row">
-                            <span class="product-price">&#8358;13,500</span>
-                        </div>
-                        <p class="product-stock"><span class="stock-dot"></span>11 in stock</p>
-                        <a href="#" class="btn-order">Order Now</a>
-                    </div>
-                </article>
-
-                <article class="product-card">
-                    <div class="product-image" style="background-color:#E9DFC8;">
-                        <span class="product-image-label">Sneakers</span>
-                    </div>
-                    <div class="product-body">
-                        <p class="product-title">Men's Sneakers</p>
-                        <div class="product-price-row">
-                            <span class="product-price">&#8358;10,200</span>
-                            <span class="product-price-original">&#8358;14,000</span>
-                            <span class="discount-tag">-27%</span>
-                        </div>
-                        <p class="product-stock"><span class="stock-dot"></span>18 in stock</p>
-                        <a href="#" class="btn-order">Order Now</a>
-                    </div>
-                </article>
-
-                <article class="product-card">
-                    <div class="product-image" style="background-color:#DDE5D1;">
-                        <span class="product-image-label">Blender</span>
-                    </div>
-                    <div class="product-body">
-                        <p class="product-title">Kitchen Blender</p>
-                        <div class="product-price-row">
-                            <span class="product-price">&#8358;17,800</span>
-                        </div>
-                        <p class="product-stock"><span class="stock-dot"></span>4 in stock</p>
-                        <a href="#" class="btn-order">Order Now</a>
-                    </div>
-                </article>
-                <article class="product-card">
-                    <div class="product-image" style="background-color:#D7DCE8;">
-                        <span class="product-image-label">Charger</span>
-                    </div>
-                    <div class="product-body">
-                        <p class="product-title">Wireless Phone Charger</p>
-                        <div class="product-price-row">
-                            <span class="product-price">&#8358;7,500</span>
-                            <span class="product-price-original">&#8358;10,000</span>
-                            <span class="discount-tag">-25%</span>
-                        </div>
-                        <p class="product-stock"><span class="stock-dot"></span>16 in stock</p>
-                        <a href="#" class="btn-order">Order Now</a>
-                    </div>
-                </article>
-
-                <article class="product-card">
-                    <div class="product-image" style="background-color:#F3E4CE;">
-                        <span class="product-image-label">Shea Butter</span>
-                    </div>
-                    <div class="product-body">
-                        <p class="product-title">Raw Shea Butter Cream</p>
-                        <div class="product-price-row">
-                            <span class="product-price">&#8358;3,500</span>
-                        </div>
-                        <p class="product-stock"><span class="stock-dot"></span>24 in stock</p>
-                        <a href="#" class="btn-order">Order Now</a>
-                    </div>
-                </article>
-
-                <article class="product-card">
-                    <div class="product-image" style="background-color:#E8D6DC;">
-                        <span class="product-image-label">Backpack</span>
-                    </div>
-                    <div class="product-body">
-                        <p class="product-title">Kids School Backpack</p>
-                        <div class="product-price-row">
-                            <span class="product-price">&#8358;6,800</span>
-                            <span class="product-price-original">&#8358;9,000</span>
-                            <span class="discount-tag">-24%</span>
-                        </div>
-                        <p class="product-stock"><span class="stock-dot"></span>13 in stock</p>
-                        <a href="#" class="btn-order">Order Now</a>
-                    </div>
-                </article>
-
-                <article class="product-card">
-                    <div class="product-image" style="background-color:#DED3BE;">
-                        <span class="product-image-label">Rice 5kg</span>
-                    </div>
-                    <div class="product-body">
-                        <p class="product-title">Rice — 5kg Bag</p>
-                        <div class="product-price-row">
-                            <span class="product-price">&#8358;8,000</span>
-                        </div>
-                        <p class="product-stock"><span class="stock-dot"></span>20 in stock</p>
-                        <a href="#" class="btn-order">Order Now</a>
-                    </div>
-                </article>
-            </div>
+            <div class="product-grid" id="productGrid"></div>
         </div>
     </section>
 
@@ -337,6 +160,55 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const productGrid = document.getElementById("productGrid");
+        const swatchColors = ["#E7DCC3", "#D9E3D0", "#EFDCE0", "#DCE6EF", "#E3D5E8", "#D6E0E3", "#E9DFC8", "#DDE5D1"];
+
+        db.collection("products").orderBy("createdAt", "desc").get()
+            .then(function (snapshot) {
+                productGrid.innerHTML = "";
+
+                if (snapshot.empty) {
+                    productGrid.innerHTML = "<p>No products yet — check back soon.</p>";
+                    return;
+                }
+
+                snapshot.docs.forEach(function (doc, index) {
+                    const product = doc.data();
+                    const isSoldOut = product.quantity <= 0;
+                    const color = swatchColors[index % swatchColors.length];
+
+                    const priceRow = product.discountPrice
+                        ? '<span class="product-price">&#8358;' + product.discountPrice.toLocaleString() + '</span>' +
+                        '<span class="product-price-original">&#8358;' + product.price.toLocaleString() + '</span>' +
+                        '<span class="discount-tag">-' + Math.round((1 - product.discountPrice / product.price) * 100) + '%</span>'
+                        : '<span class="product-price">&#8358;' + product.price.toLocaleString() + '</span>';
+
+                    const stockRow = isSoldOut
+                        ? '<p class="product-stock out-of-stock">Currently unavailable</p>'
+                        : '<p class="product-stock"><span class="stock-dot"></span>' + product.quantity + ' in stock</p>';
+
+                    const card = document.createElement("article");
+                    card.className = isSoldOut ? "product-card sold-out" : "product-card";
+                    card.innerHTML =
+                        (isSoldOut ? '<span class="sold-out-tag">Sold out</span>' : '') +
+                        '<div class="product-image" style="background-color:' + color + ';">' +
+                        '<span class="product-image-label">' + (product.category || "Product") + '</span>' +
+                        '</div>' +
+                        '<div class="product-body">' +
+                        '<p class="product-title">' + product.name + '</p>' +
+                        '<div class="product-price-row">' + priceRow + '</div>' +
+                        stockRow +
+                        '<a href="product.html?id=' + doc.id + '" class="btn-order">Order Now</a>' +
+                        '</div>';
+
+                    productGrid.appendChild(card);
+                });
+            })
+            .catch(function (error) {
+                productGrid.innerHTML = "<p>Could not load products right now.</p>";
+            });
+    </script>
 </body>
 
 </html>
