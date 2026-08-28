@@ -11,6 +11,11 @@
         href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../shared/css/style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="../shared/js/firebase-config.js"></script>
 </head>
 
 <body>
@@ -29,18 +34,81 @@
             <p class="auth-sub">Restricted access &mdash; store owner only. This page is not linked anywhere on the
                 public site.</p>
 
-            <div class="form-group">
-                <label class="form-label" for="email">Email</label>
-                <input class="form-input" type="email" id="email" placeholder="owner@example.com">
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="password">Password</label>
-                <input class="form-input" type="password" id="password" placeholder="********">
-            </div>
+            <p class="form-error" id="formError" hidden></p>
 
-            <button class="btn-save" type="button">Sign in to dashboard</button>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email</label>
+                    <input class="form-input" type="email" id="email" placeholder="owner@example.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input class="form-input" type="password" id="password" placeholder="********">
+                </div>
+
+                <button class="btn-save" type="submit">Sign in to dashboard</button>
+            </form>
         </div>
     </div>
+
+    <script>
+        const form = document.getElementById("adminLoginForm");
+        const errorBox = document.getElementById("formError");
+        const submitBtn = form.querySelector("button[type='submit']");
+
+        function showError(message) {
+            errorBox.textContent = message;
+            errorBox.hidden = false;
+        }
+
+        function clearError() {
+            errorBox.hidden = true;
+            errorBox.textContent = "";
+        }
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            clearError();
+
+            const mail = document.getElementById("email").value.trim();
+            const pass = document.getElementById("password").value;
+
+            if (!mail || !pass) {
+                showError("Please enter both your email and password.");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Signing in...";
+
+            auth.signInWithEmailAndPassword(mail, pass)
+                .then(function (userCredential) {
+                    return db.collection("users").doc(userCredential.user.uid).get();
+                })
+                .then(function (doc) {
+                    if (!doc.exists || doc.data().role !== "admin") {
+                        auth.signOut();
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = "Sign in to dashboard";
+                        showError("This account does not have admin access.");
+                        return;
+                    }
+                    window.location.href = "dashboard.html";
+                })
+                .catch(function (error) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Sign in to dashboard";
+
+                    if (error.code === "auth/invalid-email") {
+                        showError("Please enter a valid email address.");
+                    } else if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
+                        showError("Email or password is incorrect.");
+                    } else {
+                        showError("Something went wrong. Please try again.");
+                    }
+                });
+        });
+    </script>
 
 </body>
 
