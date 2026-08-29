@@ -23,7 +23,6 @@
 
     <div class="admin-shell">
 
-        <!-- Admin sidebar -->
         <aside class="admin-sidebar">
             <a class="brand-mark admin-brand" href="dashboard.html">Ò<span>j</span>à</a>
             <nav class="admin-nav">
@@ -34,72 +33,89 @@
             </nav>
         </aside>
 
-        <!-- Admin main -->
         <main class="admin-main">
             <p class="admin-title">Orders</p>
 
             <div class="products-table-wrap">
                 <table class="products-table">
-                    <tr>
-                        <th>Order</th>
-                        <th>Customer</th>
-                        <th>Item</th>
-                        <th>Amount</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-
-                    <tr>
-                        <td>#0481</td>
-                        <td>Aisha B.</td>
-                        <td>Ankara Print Shirt</td>
-                        <td>&#8358;8,500</td>
-                        <td><span class="status-badge status-pending">Pending</span></td>
-                        <td>
-                            <a href="#" class="table-action approve">Approve</a>
-                            <a href="#" class="table-action">View</a>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>#0480</td>
-                        <td>Tunde O.</td>
-                        <td>Wireless Earbuds</td>
-                        <td>&#8358;9,200</td>
-                        <td><span class="status-badge status-approved">Approved</span></td>
-                        <td>
-                            <a href="#" class="table-action">View receipt</a>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>#0479</td>
-                        <td>Fatima K.</td>
-                        <td>Leather Sandals</td>
-                        <td>&#8358;6,000</td>
-                        <td><span class="status-badge status-approved">Approved</span></td>
-                        <td>
-                            <a href="#" class="table-action">View receipt</a>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>#0478</td>
-                        <td>Chidi E.</td>
-                        <td>Ladies Handbag</td>
-                        <td>&#8358;11,000</td>
-                        <td><span class="status-badge status-pending">Pending</span></td>
-                        <td>
-                            <a href="#" class="table-action approve">Approve</a>
-                            <a href="#" class="table-action">View</a>
-                        </td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                    </tbody>
                 </table>
             </div>
 
         </main>
 
     </div>
+
+    <script>
+        const tableBody = document.getElementById("ordersTableBody");
+
+        function loadOrders() {
+            tableBody.innerHTML = "<tr><td colspan='6'>Loading...</td></tr>";
+
+            db.collection("orders").orderBy("createdAt", "desc").get()
+                .then(function (snapshot) {
+                    tableBody.innerHTML = "";
+
+                    if (snapshot.empty) {
+                        tableBody.innerHTML = "<tr><td colspan='6'>No orders yet.</td></tr>";
+                        return;
+                    }
+
+                    snapshot.docs.forEach(function (doc) {
+                        const order = doc.data();
+                        const itemsSummary = order.items.map(function (item) {
+                            return item.quantity + "x " + item.name;
+                        }).join(", ");
+
+                        const statusBadge = order.status === "approved"
+                            ? '<span class="status-badge status-approved">Approved</span>'
+                            : '<span class="status-badge status-pending">Pending</span>';
+
+                        const action = order.status === "pending"
+                            ? '<a href="#" class="table-action approve" data-id="' + doc.id + '">Approve</a>'
+                            : '&mdash;';
+
+                        const row = document.createElement("tr");
+                        row.innerHTML =
+                            '<td>#' + doc.id.slice(0, 6).toUpperCase() + '</td>' +
+                            '<td>' + order.customerEmail + '</td>' +
+                            '<td>' + itemsSummary + '</td>' +
+                            '<td>&#8358;' + order.total.toLocaleString() + '</td>' +
+                            '<td>' + statusBadge + '</td>' +
+                            '<td>' + action + '</td>';
+
+                        tableBody.appendChild(row);
+                    });
+
+                    document.querySelectorAll(".table-action.approve").forEach(function (link) {
+                        link.addEventListener("click", function (event) {
+                            event.preventDefault();
+                            const id = link.getAttribute("data-id");
+                            db.collection("orders").doc(id).update({
+                                status: "approved",
+                                approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+                            }).then(loadOrders);
+                        });
+                    });
+                })
+                .catch(function () {
+                    tableBody.innerHTML = "<tr><td colspan='6'>Could not load orders.</td></tr>";
+                });
+        }
+
+        loadOrders();
+    </script>
 
 </body>
 

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Men's Ankara Print Shirt — Òjà</title>
+    <title>Loading... — Òjà</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,6 +12,12 @@
         href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../shared/css/style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="../shared/js/firebase-config.js"></script>
+    <script src="../shared/js/cart.js"></script>
 </head>
 
 <body>
@@ -58,47 +64,103 @@
 
     <!-- Product detail -->
     <section class="product-detail">
-        <div class="container">
-            <div class="row gy-4">
-
-                <div class="col-md-6">
-                    <div class="detail-image" style="background-color:#E7DCC3;">
-                        <span class="detail-image-label">Ankara Shirt</span>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <p class="detail-eyebrow">Fashion</p>
-                    <h1 class="detail-title">Men's Ankara Print Shirt</h1>
-
-                    <div class="detail-price-row">
-                        <span class="detail-price">&#8358;8,500</span>
-                        <span class="detail-price-original">&#8358;12,000</span>
-                        <span class="discount-tag">-29%</span>
-                    </div>
-
-                    <p class="detail-stock"><span class="stock-dot"></span>14 in stock</p>
-
-                    <p class="detail-description">Handmade Ankara print shirt in a tailored fit, cut from a breathable
-                        cotton blend. Comfortable enough for everyday wear, sharp enough for owambe.</p>
-
-                    <div class="detail-qty-row">
-                        <label class="form-label" for="qty">Quantity</label>
-                        <div class="qty-stepper">
-                            <button type="button" class="qty-btn" aria-label="Decrease quantity">&minus;</button>
-                            <input type="text" class="qty-input" id="qty" value="1" readonly>
-                            <button type="button" class="qty-btn" aria-label="Increase quantity">+</button>
-                        </div>
-                    </div>
-
-                    <a href="cart.html" class="btn-primary-market detail-order-btn">Order Now</a>
-                </div>
-
-            </div>
+        <div class="container" id="productContainer">
+            <p>Loading product...</p>
         </div>
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const productContainer = document.getElementById("productContainer");
+        const params = new URLSearchParams(window.location.search);
+        const productId = params.get("id");
+
+        document.querySelector(".cart-badge").textContent = getCartCount();
+
+        if (!productId) {
+            productContainer.innerHTML = "<p>No product specified.</p>";
+        } else {
+            db.collection("products").doc(productId).get()
+                .then(function (doc) {
+                    if (!doc.exists) {
+                        productContainer.innerHTML = "<p>This product could not be found.</p>";
+                        return;
+                    }
+
+                    const product = doc.data();
+                    const isSoldOut = product.quantity <= 0;
+
+                    document.title = product.name + " — Òjà";
+
+                    const priceRow = product.discountPrice
+                        ? '<span class="detail-price">&#8358;' + product.discountPrice.toLocaleString() + '</span>' +
+                        '<span class="detail-price-original">&#8358;' + product.price.toLocaleString() + '</span>' +
+                        '<span class="discount-tag">-' + Math.round((1 - product.discountPrice / product.price) * 100) + '%</span>'
+                        : '<span class="detail-price">&#8358;' + product.price.toLocaleString() + '</span>';
+
+                    const stockRow = isSoldOut
+                        ? '<p class="detail-stock out-of-stock">Currently unavailable</p>'
+                        : '<p class="detail-stock"><span class="stock-dot"></span>' + product.quantity + ' in stock</p>';
+
+                    const orderButton = isSoldOut
+                        ? '<span class="btn-primary-market detail-order-btn" style="opacity:0.5;">Sold out</span>'
+                        : '<button type="button" class="btn-primary-market detail-order-btn" id="orderBtn">Order Now</button>';
+
+                    productContainer.innerHTML =
+                        '<div class="row gy-4">' +
+                        '<div class="col-md-6">' +
+                        '<div class="detail-image" style="background-color:#E7DCC3;">' +
+                        '<span class="detail-image-label">' + (product.category || "Product") + '</span>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="col-md-6">' +
+                        '<p class="detail-eyebrow">' + (product.category || "General") + '</p>' +
+                        '<h1 class="detail-title">' + product.name + '</h1>' +
+                        '<div class="detail-price-row">' + priceRow + '</div>' +
+                        stockRow +
+                        '<p class="detail-description">' + (product.description || "No description provided for this product yet.") + '</p>' +
+                        '<div class="detail-qty-row">' +
+                        '<label class="form-label">Quantity</label>' +
+                        '<div class="qty-stepper">' +
+                        '<button type="button" class="qty-btn" aria-label="Decrease quantity">&minus;</button>' +
+                        '<input type="text" class="qty-input" value="1" readonly>' +
+                        '<button type="button" class="qty-btn" aria-label="Increase quantity">+</button>' +
+                        '</div>' +
+                        '</div>' +
+                        orderButton +
+                        '</div>' +
+                        '</div>';
+
+                    if (!isSoldOut) {
+                        const qtyInput = document.querySelector(".qty-input");
+                        const qtyButtons = document.querySelectorAll(".qty-btn");
+
+                        qtyButtons[0].addEventListener("click", function () {
+                            const current = parseInt(qtyInput.value, 10);
+                            if (current > 1) qtyInput.value = current - 1;
+                        });
+
+                        qtyButtons[1].addEventListener("click", function () {
+                            const current = parseInt(qtyInput.value, 10);
+                            if (current < product.quantity) qtyInput.value = current + 1;
+                        });
+
+                        document.getElementById("orderBtn").addEventListener("click", function () {
+                            addToCart({
+                                id: productId,
+                                name: product.name,
+                                price: product.discountPrice || product.price,
+                                quantity: parseInt(qtyInput.value, 10)
+                            });
+                            window.location.href = "cart.html";
+                        });
+                    }
+                })
+                .catch(function (error) {
+                    productContainer.innerHTML = "<p>Something went wrong loading this product.</p>";
+                });
+        }
+    </script>
 </body>
 
 </html>

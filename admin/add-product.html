@@ -128,6 +128,16 @@
                 return;
             }
 
+            if (discountText && isNaN(discountPrice)) {
+                showError("Discounted price must be a valid number.");
+                return;
+            }
+
+            if (discountPrice !== null && discountPrice >= price) {
+                showError("Discounted price must be lower than the regular price.");
+                return;
+            }
+
             submitBtn.disabled = true;
             submitBtn.textContent = "Saving...";
 
