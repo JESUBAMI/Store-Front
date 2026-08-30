@@ -108,6 +108,18 @@
                         ? "Payment confirmed. Thank you for shopping with us."
                         : "Waiting for the seller to confirm your payment.";
 
+                    const showBankDetails = params.get("showBankDetails") === "1" && order.paymentMethod === "bank" && !isApproved;
+
+                    const bankPanel = showBankDetails
+                        ? '<div class="bank-details">' +
+                            '<p class="bank-details-title">Pay to this account</p>' +
+                            '<p class="bank-details-line"><strong>Bank:</strong> Your Bank Name</p>' +
+                            '<p class="bank-details-line"><strong>Account Number:</strong> 0123456789</p>' +
+                            '<p class="bank-details-line"><strong>Account Name:</strong> Your Business Name</p>' +
+                            '<p class="payment-disclaimer">Only pay to this exact account. We are not responsible for payments made elsewhere.</p>' +
+                          '</div>'
+                        : '';
+
                     receiptContainer.innerHTML =
                         '<p class="receipt-page-eyebrow">Order status: ' + stampText + '</p>' +
                         '<h1 class="receipt-page-title">Your Receipt</h1>' +
@@ -122,6 +134,7 @@
                             '<p class="receipt-footer">' + footerText + '</p>' +
                             '<span class="receipt-stamp ' + stampClass + '">' + stampText + '</span>' +
                         '</div>' +
+                        bankPanel +
                         '<a href="index.html" class="receipt-page-back">Continue shopping &rarr;</a>';
                 })
                 .catch(function (error) {

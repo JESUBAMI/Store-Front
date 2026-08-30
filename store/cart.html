@@ -77,6 +77,11 @@
         const cartLayout = document.getElementById("cartLayout");
         const cartBadge = document.getElementById("cartBadge");
         const DELIVERY_FEE = 1500;
+        let currentUser = null;
+
+        auth.onAuthStateChanged(function (user) {
+            currentUser = user;
+        });
 
         function render() {
             const cart = getCart();
@@ -123,7 +128,19 @@
                 '<div class="cart-summary-row"><span>Delivery</span><span>&#8358;' + DELIVERY_FEE.toLocaleString() + '</span></div>' +
                 '<div class="receipt-rule"></div>' +
                 '<div class="cart-summary-row cart-summary-total"><span>Total</span><span>&#8358;' + total.toLocaleString() + '</span></div>' +
-                '<button type="button" class="btn-primary-market cart-checkout-btn" id="checkoutBtn">Proceed to Checkout</button>' +
+                '<button type="button" class="btn-primary-market cart-checkout-btn" id="checkoutBtn">Choose Payment Method</button>' +
+                '<div class="payment-panel" id="paymentPanel" hidden>' +
+                '<p class="payment-panel-title">How would you like to pay?</p>' +
+                '<div class="payment-option" data-method="whatsapp">' +
+                '<p class="payment-option-title">Pay via WhatsApp</p>' +
+                '<p class="payment-option-desc">Chat directly with the seller to arrange payment.</p>' +
+                '</div>' +
+                '<div class="payment-option" data-method="bank">' +
+                '<p class="payment-option-title">Bank Transfer</p>' +
+                '<p class="payment-option-desc">Get the account details and pay directly.</p>' +
+                '</div>' +
+                '<p class="payment-disclaimer">Only pay to the account shown after you select Bank Transfer. Òjà is not responsible for payments sent to any other account.</p>' +
+                '</div>' +
                 '</div>' +
                 '</div>';
 
@@ -146,11 +163,48 @@
             });
         }
 
+        function placeOrder(paymentMethod) {
+            const cart = getCart();
+            const subtotal = cart.reduce(function (sum, line) { return sum + line.price * line.quantity; }, 0);
+            const total = subtotal + DELIVERY_FEE;
+
+            const batch = db.batch();
+            const orderRef = db.collection("orders").doc();
+
+            batch.set(orderRef, {
+                customerId: currentUser.uid,
+                customerEmail: currentUser.email,
+                items: cart,
+                subtotal: subtotal,
+                deliveryFee: DELIVERY_FEE,
+                total: total,
+                status: "pending",
+                paymentMethod: paymentMethod,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            cart.forEach(function (line) {
+                const productRef = db.collection("products").doc(line.id);
+                batch.update(productRef, { quantity: firebase.firestore.FieldValue.increment(-line.quantity) });
+            });
+
+            batch.commit()
+                .then(function () {
+                    localStorage.removeItem("ojaCart");
+
+                    if (paymentMethod === "whatsapp") {
+                        const message = "Hi, I'd like to pay for my Oja order (Total: NGN " + total.toLocaleString() + "). Order ID: " + orderRef.id.slice(0, 6).toUpperCase();
+                        window.location.href = "https://wa.me/2348000000000?text=" + encodeURIComponent(message);
+                    } else {
+                        window.location.href = "receipt.html?id=" + orderRef.id + "&showBankDetails=1";
+                    }
+                })
+                .catch(function () {
+                    alert("Something went wrong placing your order. Please try again.");
+                });
+        }
+
         render();
-        let currentUser = null;
-        auth.onAuthStateChanged(function (user) {
-            currentUser = user;
-        });
 
         document.addEventListener("click", function (event) {
             if (event.target && event.target.id === "checkoutBtn") {
@@ -158,40 +212,16 @@
                     window.location.href = "login.html";
                     return;
                 }
+                if (getCart().length === 0) return;
 
-                const cart = getCart();
-                if (cart.length === 0) return;
+                document.getElementById("paymentPanel").hidden = false;
+                event.target.hidden = true;
+                return;
+            }
 
-                const subtotal = cart.reduce(function (sum, line) { return sum + line.price * line.quantity; }, 0);
-                const total = subtotal + DELIVERY_FEE;
-
-                const batch = db.batch();
-                const orderRef = db.collection("orders").doc();
-
-                batch.set(orderRef, {
-                    customerId: currentUser.uid,
-                    customerEmail: currentUser.email,
-                    items: cart,
-                    subtotal: subtotal,
-                    deliveryFee: DELIVERY_FEE,
-                    total: total,
-                    status: "pending",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                cart.forEach(function (line) {
-                    const productRef = db.collection("products").doc(line.id);
-                    batch.update(productRef, { quantity: firebase.firestore.FieldValue.increment(-line.quantity) });
-                });
-
-                batch.commit()
-                    .then(function () {
-                        localStorage.removeItem("ojaCart");
-                        window.location.href = "receipt.html?id=" + orderRef.id;
-                    })
-                    .catch(function () {
-                        alert("Something went wrong placing your order. Please try again.");
-                    });
+            const optionEl = event.target.closest(".payment-option");
+            if (optionEl) {
+                placeOrder(optionEl.getAttribute("data-method"));
             }
         });
     </script>

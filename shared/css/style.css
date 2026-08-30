@@ -1468,3 +1468,126 @@ a {
         height: 60px;
     }
 }
+
+.receipt-card-flat {
+    transform: none;
+}
+
+.receipt-stamp-pending {
+    border-color: #854F0B;
+    color: #854F0B;
+}
+
+.receipt-stamp-approved {
+    border-color: #3A6B35;
+    color: #3A6B35;
+}
+
+.receipt-page {
+    background-color: #FFFFFF;
+    padding: 64px 16px;
+}
+
+.receipt-page-inner {
+    max-width: 420px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.receipt-page-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6B7178;
+    margin-bottom: 8px;
+}
+
+.receipt-page-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 26px;
+    color: #1C2321;
+    margin-bottom: 24px;
+}
+
+.receipt-page-back {
+    display: inline-block;
+    margin-top: 24px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1F3A5F;
+    border-bottom: 2px solid #E3A008;
+    padding-bottom: 2px;
+}
+
+.payment-panel {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #E4DDCC;
+}
+
+.payment-panel-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.payment-option {
+    border: 1px solid #E4DDCC;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.payment-option:hover {
+    border-color: #1F3A5F;
+    background-color: #F6F1E7;
+}
+
+.payment-option-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1C2321;
+    margin-bottom: 2px;
+}
+
+.payment-option-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: #6B7178;
+}
+
+.payment-disclaimer {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: #C1440E;
+    line-height: 1.5;
+    margin-top: 4px;
+}
+
+.bank-details {
+    background-color: #F6F1E7;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.bank-details-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.bank-details-line {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
