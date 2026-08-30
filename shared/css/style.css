@@ -345,6 +345,59 @@ a {
     opacity: 0.85;
 }
 
+.receipt-card-flat {
+    transform: none;
+}
+
+.receipt-stamp-pending {
+    border-color: #854F0B;
+    color: #854F0B;
+}
+
+.receipt-stamp-approved {
+    border-color: #3A6B35;
+    color: #3A6B35;
+}
+
+.receipt-page {
+    background-color: #FFFFFF;
+    padding: 64px 16px;
+}
+
+.receipt-page-inner {
+    max-width: 420px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.receipt-page-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6B7178;
+    margin-bottom: 8px;
+}
+
+.receipt-page-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 26px;
+    color: #1C2321;
+    margin-bottom: 24px;
+}
+
+.receipt-page-back {
+    display: inline-block;
+    margin-top: 24px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1F3A5F;
+    border-bottom: 2px solid #E3A008;
+    padding-bottom: 2px;
+}
+
 .torn-edge {
     height: 16px;
     background-image:

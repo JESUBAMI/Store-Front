@@ -187,7 +187,7 @@
                 batch.commit()
                     .then(function () {
                         localStorage.removeItem("ojaCart");
-                        window.location.href = "index.html";
+                        window.location.href = "receipt.html?id=" + orderRef.id;
                     })
                     .catch(function () {
                         alert("Something went wrong placing your order. Please try again.");

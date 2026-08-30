@@ -83,8 +83,8 @@
                             : '<span class="status-badge status-pending">Pending</span>';
 
                         const action = order.status === "pending"
-                            ? '<a href="#" class="table-action approve" data-id="' + doc.id + '">Approve</a>'
-                            : '&mdash;';
+                            ? '<a href="#" class="table-action approve" data-id="' + doc.id + '">Approve</a> <a href="../store/receipt.html?id=' + doc.id + '" class="table-action" target="_blank">View</a>'
+                            : '<a href="../store/receipt.html?id=' + doc.id + '" class="table-action" target="_blank">View receipt</a>';
 
                         const row = document.createElement("tr");
                         row.innerHTML =
