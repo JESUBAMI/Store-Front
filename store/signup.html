@@ -50,7 +50,8 @@
 
 
 
-            <p class="form-error" id="formError" hidden></p>
+            <p class="form-error alert alert-danger" id="formError" hidden></p>
+            <p class="form-success alert alert-success" id="formSuccess" hidden></p>
 
             <form id="signupForm">
                 <div class="form-group">
@@ -82,22 +83,31 @@
     <script>
         const form = document.getElementById("signupForm");
         const errorBox = document.getElementById("formError");
+        const successBox = document.getElementById("formSuccess");
         const submitBtn = form.querySelector("button[type='submit']");
 
         function showError(message) {
+            successBox.hidden = true;
             errorBox.textContent = message;
             errorBox.hidden = false;
         }
 
-        function clearError() {
+        function showSuccess(message) {
             errorBox.hidden = true;
-            errorBox.textContent = "";
+            successBox.textContent = message;
+            successBox.hidden = false;
         }
+
+        function clearMessages() {
+            errorBox.hidden = true;
+            successBox.hidden = true;
+        }
+
         const googleBtn = document.getElementById("googleBtn");
         const googleProvider = new firebase.auth.GoogleAuthProvider();
 
         googleBtn.addEventListener("click", function () {
-            clearError();
+            clearMessages();
 
             auth.signInWithPopup(googleProvider)
                 .then(function (result) {
@@ -123,7 +133,7 @@
 
         form.addEventListener("submit", function (event) {
             event.preventDefault();
-            clearError();
+            clearMessages();
 
             const fName = document.getElementById("fullName").value.trim();
             const mail = document.getElementById("email").value.trim();
@@ -160,10 +170,12 @@
                     });
                 })
                 .then(function () {
-                    window.location.href = "index.html";
+                    showSuccess("Account created! Taking you to the store...");
+                    setTimeout(function () {
+                        window.location.href = "index.html";
+                    }, 700);
                 })
                 .catch(function (error) {
-                    console.log(error.code, error.message);
                     submitBtn.disabled = false;
                     submitBtn.textContent = "Create account";
 

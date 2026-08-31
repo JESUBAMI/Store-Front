@@ -1591,3 +1591,166 @@ a {
     font-size: 13px;
     margin-bottom: 4px;
 }
+
+
+/* ============================================
+   ALERTS — form feedback (error / success)
+   Added: replaces the unstyled .form-error box
+   with proper alert-danger / alert-success states
+   ============================================ */
+
+.alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 11px 14px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.45;
+    margin-bottom: 18px;
+    border: 1px solid transparent;
+}
+
+.alert-danger {
+    background-color: #FBEAE3;
+    color: #8A2E0A;
+    border-color: #EFC4AE;
+}
+
+.alert-success {
+    background-color: #E7F0E5;
+    color: #244A21;
+    border-color: #B9D4B4;
+}
+
+.form-error.alert-danger,
+.form-success.alert-success {
+    display: flex;
+}
+
+/* ============================================
+   LIVE PRESENCE — "people viewing this" widgets
+   ============================================ */
+
+.live-viewers {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #3A6B35;
+    background-color: #E7F0E5;
+    border-radius: 999px;
+    padding: 5px 12px;
+    margin-top: 10px;
+}
+
+.live-viewers .live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #3A6B35;
+    animation: livePulse 1.6s infinite ease-in-out;
+}
+
+@keyframes livePulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.4;
+        transform: scale(0.8);
+    }
+}
+
+.activity-panel {
+    background-color: #FFFFFF;
+    border: 1px solid #E4DDCC;
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-top: 24px;
+}
+
+.activity-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 0;
+    border-bottom: 1px solid #F0EBDD;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+}
+
+.activity-row:last-child {
+    border-bottom: none;
+}
+
+.activity-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    color: #3A6B35;
+    background-color: #E7F0E5;
+    border-radius: 999px;
+    padding: 2px 10px;
+}
+
+/* Product image (used when a product has an uploaded photo) */
+.product-image img,
+.detail-image img,
+.table-swatch img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+}
+
+/* Auth-aware nav area */
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-user-name {
+    color: #F6F1E7;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.btn-logout {
+    border: 1px solid #F6F1E7;
+    color: #F6F1E7;
+    border-radius: 999px;
+    padding: 7px 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    background: transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-logout:hover {
+    background-color: #F6F1E7;
+    color: #1F3A5F;
+}
+
+/* Image upload dropzone (active state) */
+.dropzone-preview {
+    width: 100%;
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-top: 10px;
+    display: none;
+}

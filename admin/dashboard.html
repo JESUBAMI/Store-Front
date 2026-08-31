@@ -17,6 +17,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="../shared/js/firebase-config.js"></script>
     <script src="../shared/js/admin-guard.js"></script>
+    <script src="../shared/js/presence.js"></script>
 </head>
 
 <body>
@@ -54,6 +55,14 @@
             <div class="chart-card">
                 <p class="chart-label">Sales — last 7 days</p>
                 <div id="chartContainer"></div>
+            </div>
+
+            <!-- NEW: live "who's on the site right now" panel, powered by presence.js -->
+            <div class="activity-panel">
+                <p class="chart-label">Live on site right now</p>
+                <div id="liveActivityList">
+                    <div class="activity-row"><span>No one is currently browsing a product.</span></div>
+                </div>
             </div>
 
             <div class="recent-orders">
@@ -151,6 +160,23 @@
                 return '<div class="order-row">' +
                     '<span>Order #' + order.id.slice(0, 6).toUpperCase() + ' &mdash; ' + itemsSummary + '</span>' +
                     badge +
+                    '</div>';
+            }).join("");
+        });
+
+        // NEW: live activity feed — updates in real time as clients open/close product pages
+        watchAllActivity(function (list) {
+            const container = document.getElementById("liveActivityList");
+
+            if (list.length === 0) {
+                container.innerHTML = '<div class="activity-row"><span>No one is currently browsing a product.</span></div>';
+                return;
+            }
+
+            container.innerHTML = list.map(function (row) {
+                return '<div class="activity-row">' +
+                    '<span>' + row.productName + '</span>' +
+                    '<span class="activity-count">' + row.count + (row.count === 1 ? ' viewer' : ' viewers') + '</span>' +
                     '</div>';
             }).join("");
         });

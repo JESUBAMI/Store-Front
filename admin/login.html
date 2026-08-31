@@ -50,7 +50,7 @@
 
             <div class="auth-divider"><span>or</span></div>
 
-            <p class="form-error" id="formError" hidden></p>
+            <p class="form-error alert alert-danger" id="formError" hidden></p>
 
             <form id="adminLoginForm">
                 <div class="form-group">
@@ -82,6 +82,10 @@
             errorBox.textContent = "";
         }
 
+        // FIX: this used to check the role then do nothing — the redirect
+        // line was commented out, so a correct admin login just sat on this
+        // page forever with no visible error and no way forward. That was
+        // the actual "I cannot sign in as admin" bug.
         function checkAdminAndEnter(uid) {
             return db.collection("users").doc(uid).get().then(function (doc) {
                 if (!doc.exists || doc.data().role !== "admin") {
@@ -105,6 +109,8 @@
                 .catch(function (error) {
                     if (error.code === "not-admin") {
                         showError("This account does not have admin access.");
+                    } else if (error.code === "permission-denied") {
+                        showError("Firestore is blocking this read — check your security rules.");
                     } else {
                         showError("Google sign-in failed. Please try again.");
                     }
@@ -140,6 +146,8 @@
                         showError("Please enter a valid email address.");
                     } else if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
                         showError("Email or password is incorrect.");
+                    } else if (error.code === "permission-denied") {
+                        showError("Firestore is blocking this read — check your security rules.");
                     } else {
                         showError("Something went wrong. Please try again.");
                     }

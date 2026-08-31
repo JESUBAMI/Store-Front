@@ -38,13 +38,20 @@
         <main class="admin-main">
             <p class="admin-title">Add a product</p>
 
-            <p class="form-error" id="formError" hidden></p>
+            <p class="form-error alert alert-danger" id="formError" hidden></p>
+            <p class="form-success alert alert-success" id="formSuccess" hidden></p>
 
             <form class="product-form" id="addProductForm">
 
-                <label class="dropzone" for="productPhoto">
-                    <span>Photo upload coming soon &mdash; product will use a placeholder for now</span>
-                    <input type="file" id="productPhoto" accept="image/*" hidden disabled>
+                <!-- FIX: was permanently disabled with "coming soon" text.
+                     Now reads the chosen image, shrinks it on a <canvas>,
+                     and stores it as a compact base64 string directly on
+                     the product document — no Firebase Storage bucket
+                     needed, which keeps setup simple for a class project. -->
+                <label class="dropzone" for="productPhoto" id="dropzoneLabel">
+                    <span id="dropzoneText">Click to upload a product photo (optional)</span>
+                    <img class="dropzone-preview" id="dropzonePreview" alt="Product preview">
+                    <input type="file" id="productPhoto" accept="image/*" hidden>
                 </label>
 
                 <div class="form-group">
@@ -93,21 +100,73 @@
     <script>
         const form = document.getElementById("addProductForm");
         const errorBox = document.getElementById("formError");
+        const successBox = document.getElementById("formSuccess");
         const submitBtn = form.querySelector("button[type='submit']");
 
         function showError(message) {
+            successBox.hidden = true;
             errorBox.textContent = message;
             errorBox.hidden = false;
         }
 
-        function clearError() {
+        function showSuccess(message) {
             errorBox.hidden = true;
-            errorBox.textContent = "";
+            successBox.textContent = message;
+            successBox.hidden = false;
         }
+
+        function clearMessages() {
+            errorBox.hidden = true;
+            successBox.hidden = true;
+        }
+
+        // --- Image upload: read file -> shrink on canvas -> base64 string ---
+        const photoInput = document.getElementById("productPhoto");
+        const dropzonePreview = document.getElementById("dropzonePreview");
+        const dropzoneText = document.getElementById("dropzoneText");
+        let photoDataUrl = null; // null = no photo chosen, product falls back to a color swatch
+
+        const MAX_PHOTO_WIDTH = 600;
+
+        photoInput.addEventListener("change", function () {
+            const file = photoInput.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith("image/")) {
+                showError("Please choose an image file.");
+                photoInput.value = "";
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const img = new Image();
+                img.onload = function () {
+                    // Resize so the stored string stays small — a full-size
+                    // phone photo would be far too large to store as a
+                    // Firestore field (1 MiB document limit).
+                    const scale = Math.min(1, MAX_PHOTO_WIDTH / img.width);
+                    const canvas = document.createElement("canvas");
+                    canvas.width = img.width * scale;
+                    canvas.height = img.height * scale;
+
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    photoDataUrl = canvas.toDataURL("image/jpeg", 0.72);
+
+                    dropzonePreview.src = photoDataUrl;
+                    dropzonePreview.style.display = "block";
+                    dropzoneText.textContent = "Photo selected — click to change it";
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
 
         form.addEventListener("submit", function (event) {
             event.preventDefault();
-            clearError();
+            clearMessages();
 
             const name = document.getElementById("productName").value.trim();
             const category = document.getElementById("category").value;
@@ -147,15 +206,23 @@
                 price: price,
                 discountPrice: discountPrice,
                 quantity: quantity,
+                photoUrl: photoDataUrl, // null if no photo was chosen
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             })
                 .then(function () {
-                    window.location.href = "products.html";
+                    showSuccess("Product saved! Redirecting to your product list...");
+                    setTimeout(function () {
+                        window.location.href = "products.html";
+                    }, 900);
                 })
                 .catch(function (error) {
                     submitBtn.disabled = false;
                     submitBtn.textContent = "Save product";
-                    showError("Something went wrong. Please try again.");
+                    if (error.code === "permission-denied") {
+                        showError("Firestore blocked this write — check your security rules and that your account has role: admin.");
+                    } else {
+                        showError("Something went wrong. Please try again.");
+                    }
                 });
         });
     </script>

@@ -38,6 +38,9 @@
         <main class="admin-main">
             <p class="admin-title">All products</p>
 
+            <p class="form-error alert alert-danger" id="formError" hidden></p>
+            <p class="form-success alert alert-success" id="formSuccess" hidden></p>
+
             <div class="products-table-wrap">
                 <table class="products-table">
                     <thead>
@@ -60,7 +63,22 @@
 
     <script>
         const tableBody = document.getElementById("productsTableBody");
+        const errorBox = document.getElementById("formError");
+        const successBox = document.getElementById("formSuccess");
         const swatchColors = ["#E7DCC3", "#D9E3D0", "#EFDCE0", "#DCE6EF", "#E3D5E8", "#D6E0E3", "#E9DFC8", "#DDE5D1"];
+
+        function flashSuccess(message) {
+            errorBox.hidden = true;
+            successBox.textContent = message;
+            successBox.hidden = false;
+            setTimeout(function () { successBox.hidden = true; }, 2500);
+        }
+
+        function flashError(message) {
+            successBox.hidden = true;
+            errorBox.textContent = message;
+            errorBox.hidden = false;
+        }
 
         function loadProducts() {
             tableBody.innerHTML = "<tr><td colspan='5'>Loading...</td></tr>";
@@ -80,10 +98,17 @@
                         const color = swatchColors[index % swatchColors.length];
                         const displayPrice = product.discountPrice || product.price;
 
+                        // FIX: use the uploaded photo when one exists, otherwise
+                        // keep the original placeholder-color swatch.
+                        const swatchInner = product.photoUrl
+                            ? '<img src="' + product.photoUrl + '" alt="">'
+                            : "";
+                        const swatchStyle = product.photoUrl ? "" : "background-color:" + color + ";";
+
                         const row = document.createElement("tr");
                         row.innerHTML =
                             '<td><div class="table-item">' +
-                                '<span class="table-swatch" style="background-color:' + color + ';"></span>' +
+                                '<span class="table-swatch" style="' + swatchStyle + '">' + swatchInner + '</span>' +
                                 product.name +
                             '</div></td>' +
                             '<td>&#8358;' + displayPrice.toLocaleString() + '</td>' +
@@ -104,13 +129,23 @@
                             event.preventDefault();
                             const id = link.getAttribute("data-id");
                             if (confirm("Delete this product? This cannot be undone.")) {
-                                db.collection("products").doc(id).delete().then(loadProducts);
+                                db.collection("products").doc(id).delete()
+                                    .then(function () {
+                                        flashSuccess("Product deleted.");
+                                        loadProducts();
+                                    })
+                                    .catch(function () {
+                                        flashError("Could not delete this product. Check your permissions.");
+                                    });
                             }
                         });
                     });
                 })
                 .catch(function (error) {
-                    tableBody.innerHTML = "<tr><td colspan='5'>Could not load products.</td></tr>";
+                    const message = error.code === "permission-denied"
+                        ? "Firestore blocked this read — check your security rules and that your account has role: admin."
+                        : "Could not load products.";
+                    tableBody.innerHTML = "<tr><td colspan='5'>" + message + "</td></tr>";
                 });
         }
 

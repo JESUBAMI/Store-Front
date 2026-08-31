@@ -55,7 +55,9 @@
                         </svg>
                         <span class="cart-badge" id="cartBadge">0</span>
                     </a>
-                    <a href="login.html" class="btn-signin">Sign in</a>
+                    <div id="navUserArea">
+                        <a href="login.html" class="btn-signin">Sign in</a>
+                    </div>
                 </div>
 
             </div>
@@ -67,6 +69,8 @@
         <div class="container">
             <h1 class="cart-title">Your Cart</h1>
 
+            <p class="form-error alert alert-danger" id="orderError" hidden></p>
+
             <div class="row gy-4" id="cartLayout">
             </div>
         </div>
@@ -76,11 +80,28 @@
     <script>
         const cartLayout = document.getElementById("cartLayout");
         const cartBadge = document.getElementById("cartBadge");
+        const orderError = document.getElementById("orderError");
         const DELIVERY_FEE = 1500;
+        // FIX: was a placeholder "2348000000000". Real seller number: 07062729106
+        // WhatsApp links need the international format with no leading 0.
+        const SELLER_WHATSAPP = "2347062729106";
         let currentUser = null;
 
         auth.onAuthStateChanged(function (user) {
             currentUser = user;
+
+            const area = document.getElementById("navUserArea");
+            if (user) {
+                area.innerHTML = '<div class="nav-user">' +
+                    '<span class="nav-user-name">' + (user.displayName || user.email) + '</span>' +
+                    '<button type="button" class="btn-logout" id="logoutBtn">Log out</button>' +
+                    '</div>';
+                document.getElementById("logoutBtn").addEventListener("click", function () {
+                    auth.signOut().then(function () { window.location.href = "index.html"; });
+                });
+            } else {
+                area.innerHTML = '<a href="login.html" class="btn-signin">Sign in</a>';
+            }
         });
 
         function render() {
@@ -164,6 +185,7 @@
         }
 
         function placeOrder(paymentMethod) {
+            orderError.hidden = true;
             const cart = getCart();
             const subtotal = cart.reduce(function (sum, line) { return sum + line.price * line.quantity; }, 0);
             const total = subtotal + DELIVERY_FEE;
@@ -194,13 +216,17 @@
 
                     if (paymentMethod === "whatsapp") {
                         const message = "Hi, I'd like to pay for my Oja order (Total: NGN " + total.toLocaleString() + "). Order ID: " + orderRef.id.slice(0, 6).toUpperCase();
-                        window.location.href = "https://wa.me/2348000000000?text=" + encodeURIComponent(message);
+                        window.location.href = "https://wa.me/" + SELLER_WHATSAPP + "?text=" + encodeURIComponent(message);
                     } else {
                         window.location.href = "receipt.html?id=" + orderRef.id + "&showBankDetails=1";
                     }
                 })
-                .catch(function () {
-                    alert("Something went wrong placing your order. Please try again.");
+                .catch(function (error) {
+                    const message = error.code === "permission-denied"
+                        ? "Firestore blocked this order — check your security rules."
+                        : "Something went wrong placing your order. Please try again.";
+                    orderError.textContent = message;
+                    orderError.hidden = false;
                 });
         }
 

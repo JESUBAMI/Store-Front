@@ -55,7 +55,9 @@
                         </svg>
                         <span class="cart-badge" id="cartBadge">0</span>
                     </a>
-                    <a href="login.html" class="btn-signin">Sign in</a>
+                    <div id="navUserArea">
+                        <a href="login.html" class="btn-signin">Sign in</a>
+                    </div>
                 </div>
 
             </div>
@@ -147,6 +149,19 @@
         }
 
         auth.onAuthStateChanged(function (user) {
+            const area = document.getElementById("navUserArea");
+            if (user) {
+                area.innerHTML = '<div class="nav-user">' +
+                    '<span class="nav-user-name">' + (user.displayName || user.email) + '</span>' +
+                    '<button type="button" class="btn-logout" id="logoutBtn">Log out</button>' +
+                    '</div>';
+                document.getElementById("logoutBtn").addEventListener("click", function () {
+                    auth.signOut().then(function () { window.location.href = "index.html"; });
+                });
+            } else {
+                area.innerHTML = '<a href="login.html" class="btn-signin">Sign in</a>';
+            }
+
             if (!user) {
                 receiptContainer.innerHTML = '<p>Please <a href="login.html">sign in</a> to view this receipt.</p>';
                 return;
