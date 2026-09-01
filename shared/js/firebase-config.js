@@ -1,8 +1,19 @@
-// Firebase setup — compat SDK, loaded via plain <script> tags.
-// Works by just opening the HTML file directly, no local server needed.
-// Every page loads the 3 firebase-*-compat.js scripts, THEN this file,
-// in that order — see the <head> of signup.html for the pattern.
-// Only ever edit the config values here.
+// =========================================================
+// FIREBASE CONFIG
+// Compat SDK, loaded via plain <script> tags — works by just
+// double-clicking the HTML file, no local server required.
+//
+// Load order on every page that needs Firebase:
+//   1. firebase-app-compat.js
+//   2. firebase-auth-compat.js
+//   3. firebase-firestore-compat.js
+//   4. this file (firebase-config.js)
+//   5. (admin pages only) admin-guard.js
+//   6. (pages using presence) presence.js
+//
+// Only ever edit the config values below — every other file
+// imports the "auth" and "db" shortcuts this file creates.
+// =========================================================
 
 const firebaseConfig = {
     apiKey: "AIzaSyBBZB32-ZZeZDpqF6LGmNuzxTbbfTUbz64",
@@ -16,5 +27,6 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-const auth = firebase.auth();
-const db = firebase.firestore();
+// Shortcuts every other script uses:
+const auth = firebase.auth();       // authentication (sign up / sign in)
+const db = firebase.firestore();    // database (products, orders, users)

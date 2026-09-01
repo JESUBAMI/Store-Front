@@ -1,17 +1,22 @@
-// The cart is a plain array stored in the browser's localStorage:
-// [{ id, name, price, quantity }, ...]
-// This is per-browser, not tied to a signed-in account, and doesn't
-// need Firebase at all — just the browser's own built-in storage.
+// =========================================================
+// CART — stored in the browser's own localStorage, not Firebase.
+// Shape: [{ id, name, price, quantity }, ...]
+// This is per-browser, not tied to a signed-in account — it's
+// meant to survive reloads but doesn't need any security rules.
+// =========================================================
 
+// --- Read the whole cart ---
 function getCart() {
     const raw = localStorage.getItem("ojaCart");
     return raw ? JSON.parse(raw) : [];
 }
 
+// --- Overwrite the whole cart ---
 function saveCart(cart) {
     localStorage.setItem("ojaCart", JSON.stringify(cart));
 }
 
+// --- Add an item (or bump its quantity if it's already in the cart) ---
 function addToCart(item) {
     const cart = getCart();
     const existing = cart.find(function (line) { return line.id === item.id; });
@@ -25,10 +30,12 @@ function addToCart(item) {
     saveCart(cart);
 }
 
+// --- Remove one line entirely ---
 function removeFromCart(id) {
     saveCart(getCart().filter(function (line) { return line.id !== id; }));
 }
 
+// --- Change one line's quantity (never below 1) ---
 function updateCartQuantity(id, quantity) {
     const cart = getCart();
     const line = cart.find(function (l) { return l.id === id; });
@@ -38,6 +45,7 @@ function updateCartQuantity(id, quantity) {
     saveCart(cart);
 }
 
+// --- Total item count, for the navbar badge ---
 function getCartCount() {
     return getCart().reduce(function (sum, line) { return sum + line.quantity; }, 0);
 }

@@ -1,11 +1,13 @@
-/* ÒJÀ — shared styles
+/* =========================================================
+   ÒJÀ — SHARED STYLES
    Color tokens (used as direct hex values throughout):
    Paper (bg)        #F6F1E7
    Ink (text)        #1C2321
    Market indigo     #1F3A5F
    Market gold       #E3A008
    Signal rust       #C1440E
-   Leaf green        #3A6B35 */
+   Leaf green        #3A6B35
+   ========================================================= */
 
 * {
     box-sizing: border-box;
@@ -22,7 +24,7 @@ a {
     text-decoration: none;
 }
 
-/* Navbar */
+/* ===================== NAVBAR ===================== */
 
 .navbar-market {
     background-color: #1F3A5F;
@@ -123,7 +125,48 @@ a {
     margin: 5px 0;
 }
 
-/* Category pills */
+/* --- Signed-in account dropdown (replaces "Sign in" once logged in) --- */
+
+.btn-account-toggle {
+    background: none;
+    border: none;
+    color: #F6F1E7;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 6px 4px;
+}
+
+.nav-account-menu {
+    background-color: #FFFFFF;
+    border: 1px solid #E4DDCC;
+    border-radius: 10px;
+    padding: 6px;
+    min-width: 180px;
+    font-family: 'Inter', sans-serif;
+}
+
+.nav-account-menu .dropdown-item {
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #1C2321;
+}
+
+.nav-account-menu .dropdown-item:hover {
+    background-color: #F6F1E7;
+}
+
+.nav-logout-item {
+    color: #C1440E;
+}
+
+.nav-logout-item:hover {
+    background-color: #FBEAE1;
+    color: #C1440E;
+}
+
+/* ===================== CATEGORY PILLS ===================== */
 
 .category-row {
     background-color: #F6F1E7;
@@ -175,7 +218,7 @@ a {
     color: #F6F1E7;
 }
 
-/* Hero */
+/* ===================== HERO ===================== */
 
 .hero {
     padding: 64px 0 48px;
@@ -230,11 +273,18 @@ a {
     font-weight: 600;
     font-size: 15px;
     transition: background-color 0.15s ease;
+    border: none;
+    cursor: pointer;
 }
 
 .btn-primary-market:hover {
     background-color: #16283F;
     color: #F6F1E7;
+}
+
+.btn-primary-market[disabled] {
+    opacity: 0.55;
+    cursor: not-allowed;
 }
 
 .link-underline {
@@ -249,6 +299,17 @@ a {
 .link-underline:hover {
     color: #1F3A5F;
 }
+
+/* --- Hero image (photo replacing the decorative receipt mockup) --- */
+
+.hero-side-img {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    display: block;
+}
+
+/* --- Decorative receipt mockup (kept in markup, currently commented out) --- */
 
 .receipt-card {
     position: relative;
@@ -359,45 +420,6 @@ a {
     color: #3A6B35;
 }
 
-.receipt-page {
-    background-color: #FFFFFF;
-    padding: 64px 16px;
-}
-
-.receipt-page-inner {
-    max-width: 420px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.receipt-page-eyebrow {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #6B7178;
-    margin-bottom: 8px;
-}
-
-.receipt-page-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 700;
-    font-size: 26px;
-    color: #1C2321;
-    margin-bottom: 24px;
-}
-
-.receipt-page-back {
-    display: inline-block;
-    margin-top: 24px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    color: #1F3A5F;
-    border-bottom: 2px solid #E3A008;
-    padding-bottom: 2px;
-}
-
 .torn-edge {
     height: 16px;
     background-image:
@@ -408,13 +430,12 @@ a {
     background-position: bottom;
 }
 
-/* Responsive: Hero */
+/* --- Responsive: Hero --- */
 
 @media (max-width: 767px) {
     .hero-heading {
         font-size: 30px;
     }
-
     .receipt-card {
         max-width: 260px;
         transform: rotate(-1deg);
@@ -422,7 +443,7 @@ a {
     }
 }
 
-/* Products */
+/* ===================== PRODUCTS GRID (client) ===================== */
 
 .products {
     background-color: #FFFFFF;
@@ -463,6 +484,7 @@ a {
     display: flex;
     flex-direction: column;
     transition: box-shadow 0.15s ease, transform 0.15s ease;
+    position: relative;
 }
 
 .product-card:hover {
@@ -476,6 +498,13 @@ a {
     align-items: center;
     justify-content: center;
     padding: 16px;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .product-image-label {
@@ -564,6 +593,10 @@ a {
     font-weight: 600;
     font-size: 13px;
     transition: background-color 0.15s ease;
+    border: none;
+    cursor: pointer;
+    display: block;
+    width: 100%;
 }
 
 .btn-order:hover {
@@ -571,7 +604,7 @@ a {
     color: #F6F1E7;
 }
 
-/* Sold-out state */
+/* --- Sold-out state --- */
 
 .product-card.sold-out {
     position: relative;
@@ -611,7 +644,7 @@ a {
     pointer-events: none;
 }
 
-/* Responsive: Products */
+/* --- Responsive: Products grid --- */
 
 @media (max-width: 480px) {
     .product-grid {
@@ -620,7 +653,7 @@ a {
     }
 }
 
-/* Footer */
+/* ===================== FOOTER ===================== */
 
 .site-footer {
     background-color: #1F3A5F;
@@ -694,20 +727,19 @@ a {
     margin: 0;
 }
 
-/* Responsive: Footer */
+/* --- Responsive: Footer --- */
 
 @media (max-width: 480px) {
     .footer-links {
         gap: 32px;
     }
-
     .footer-bottom {
         flex-direction: column;
         gap: 4px;
     }
 }
 
-/* Auth pages (sign up / sign in) */
+/* ===================== AUTH PAGES (sign up / sign in) ===================== */
 
 .auth-header {
     background-color: #1F3A5F;
@@ -744,7 +776,7 @@ a {
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     color: #6B7178;
-    margin: 0 0 28px;
+    margin: 0 0 20px;
     line-height: 1.5;
 }
 
@@ -804,6 +836,11 @@ a {
     color: #F6F1E7;
 }
 
+.btn-save[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 .auth-switch {
     text-align: center;
     margin-top: 18px;
@@ -818,6 +855,30 @@ a {
     border-bottom: 1px solid #E3A008;
     padding-bottom: 1px;
 }
+
+/* --- Message boxes (errors + success confirmations) --- */
+
+.form-error {
+    background-color: #FBEAE1;
+    color: #C1440E;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.form-success {
+    background-color: #EAF3DE;
+    color: #3A6B35;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+/* --- "Continue with Google" button + divider --- */
 
 .btn-google {
     display: flex;
@@ -835,7 +896,7 @@ a {
     color: #1C2321;
     cursor: pointer;
     transition: background-color 0.15s ease, border-color 0.15s ease;
-    margin-bottom: 18px;
+    margin: 18px 0;
 }
 
 .btn-google:hover {
@@ -861,7 +922,7 @@ a {
     background-color: #E4DDCC;
 }
 
-/* Responsive: Auth pages */
+/* --- Responsive: Auth pages --- */
 
 @media (max-width: 480px) {
     .auth-card {
@@ -869,7 +930,7 @@ a {
     }
 }
 
-/* Admin shell */
+/* ===================== ADMIN SHELL ===================== */
 
 .admin-shell {
     display: flex;
@@ -933,7 +994,7 @@ a {
     margin: 0 0 24px;
 }
 
-/* Dashboard stats + chart */
+/* ===================== DASHBOARD: STATS + CHART ===================== */
 
 .stat-grid {
     display: grid;
@@ -996,6 +1057,38 @@ a {
     text-align: center;
 }
 
+/* --- Live "who's viewing" activity panel --- */
+
+.activity-panel {
+    background-color: #FFFFFF;
+    margin-bottom: 28px;
+}
+
+.activity-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background-color: #F6F1E7;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: #1C2321;
+}
+
+.activity-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: #3A6B35;
+    background-color: #EAF3DE;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+/* --- Recent orders list --- */
+
 .recent-orders {
     background-color: #FFFFFF;
 }
@@ -1029,13 +1122,12 @@ a {
     color: #3A6B35;
 }
 
-/* Responsive: Admin */
+/* --- Responsive: Admin shell --- */
 
 @media (max-width: 768px) {
     .admin-shell {
         flex-direction: column;
     }
-
     .admin-sidebar {
         width: 100%;
         display: flex;
@@ -1043,17 +1135,14 @@ a {
         gap: 16px;
         padding: 14px 20px;
     }
-
     .admin-brand {
         margin-bottom: 0;
     }
-
     .admin-nav {
         flex-direction: row;
         flex-wrap: wrap;
         gap: 8px;
     }
-
     .admin-main {
         padding: 24px 20px;
     }
@@ -1065,7 +1154,7 @@ a {
     }
 }
 
-/* Add product form */
+/* ===================== ADD PRODUCT FORM ===================== */
 
 .product-form {
     max-width: 560px;
@@ -1088,6 +1177,14 @@ a {
 .dropzone:hover {
     border-color: #1F3A5F;
     background-color: #F6F1E7;
+}
+
+.dropzone-preview {
+    display: none;
+    max-width: 100%;
+    max-height: 160px;
+    border-radius: 8px;
+    margin-top: 10px;
 }
 
 .form-select {
@@ -1122,7 +1219,7 @@ a {
     margin-top: 8px;
 }
 
-/* Responsive: Add product form */
+/* --- Responsive: Add product form --- */
 
 @media (max-width: 560px) {
     .form-row {
@@ -1131,7 +1228,7 @@ a {
     }
 }
 
-/* Products table (admin) */
+/* ===================== ADMIN TABLES (products + orders) ===================== */
 
 .products-table-wrap {
     overflow-x: auto;
@@ -1175,6 +1272,13 @@ a {
     border-radius: 6px;
     flex-shrink: 0;
     display: inline-block;
+    overflow: hidden;
+}
+
+.table-swatch img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .status-in {
@@ -1211,7 +1315,7 @@ a {
     text-decoration: underline;
 }
 
-/* Product detail page */
+/* ===================== PRODUCT DETAIL PAGE ===================== */
 
 .product-detail {
     background-color: #FFFFFF;
@@ -1224,6 +1328,13 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+}
+
+.detail-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .detail-image-label {
@@ -1337,7 +1448,44 @@ a {
     display: inline-block;
 }
 
-/* Responsive: Product detail */
+/* --- "Added to cart" inline confirmation --- */
+
+.added-to-cart-msg {
+    display: inline-block;
+    margin-left: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #3A6B35;
+}
+
+/* --- Live viewers indicator ("3 people viewing this now") --- */
+
+.live-viewers {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: #3A6B35;
+    margin-top: 12px;
+}
+
+.live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #3A6B35;
+    display: inline-block;
+    animation: pulse-dot 1.6s infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* --- Responsive: Product detail --- */
 
 @media (max-width: 767px) {
     .detail-title {
@@ -1345,7 +1493,7 @@ a {
     }
 }
 
-/* Cart page */
+/* ===================== CART PAGE ===================== */
 
 .cart-section {
     background-color: #FFFFFF;
@@ -1458,69 +1606,10 @@ a {
     display: block;
     text-align: center;
     margin-top: 16px;
+    width: 100%;
 }
 
-/* Responsive: Cart */
-
-@media (max-width: 480px) {
-    .cart-item-image {
-        width: 60px;
-        height: 60px;
-    }
-}
-
-.receipt-card-flat {
-    transform: none;
-}
-
-.receipt-stamp-pending {
-    border-color: #854F0B;
-    color: #854F0B;
-}
-
-.receipt-stamp-approved {
-    border-color: #3A6B35;
-    color: #3A6B35;
-}
-
-.receipt-page {
-    background-color: #FFFFFF;
-    padding: 64px 16px;
-}
-
-.receipt-page-inner {
-    max-width: 420px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.receipt-page-eyebrow {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #6B7178;
-    margin-bottom: 8px;
-}
-
-.receipt-page-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 700;
-    font-size: 26px;
-    color: #1C2321;
-    margin-bottom: 24px;
-}
-
-.receipt-page-back {
-    display: inline-block;
-    margin-top: 24px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    color: #1F3A5F;
-    border-bottom: 2px solid #E3A008;
-    padding-bottom: 2px;
-}
+/* --- Payment method picker (shown after "Choose Payment Method") --- */
 
 .payment-panel {
     margin-top: 16px;
@@ -1571,6 +1660,56 @@ a {
     margin-top: 4px;
 }
 
+/* --- Responsive: Cart --- */
+
+@media (max-width: 480px) {
+    .cart-item-image {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* ===================== RECEIPT PAGE ===================== */
+
+.receipt-page {
+    background-color: #FFFFFF;
+    padding: 64px 16px;
+}
+
+.receipt-page-inner {
+    max-width: 420px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.receipt-page-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6B7178;
+    margin-bottom: 8px;
+}
+
+.receipt-page-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 26px;
+    color: #1C2321;
+    margin-bottom: 24px;
+}
+
+.receipt-page-back {
+    display: inline-block;
+    margin-top: 24px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1F3A5F;
+    border-bottom: 2px solid #E3A008;
+    padding-bottom: 2px;
+}
+
 .bank-details {
     background-color: #F6F1E7;
     border-radius: 8px;
@@ -1590,171 +1729,4 @@ a {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 13px;
     margin-bottom: 4px;
-}
-
-
-/* ALERTS — plain colored text, no box. Hidden by default via the HTML
-   "hidden" attribute; only shown once the JS decides there's something
-   to say. */
-.alert {
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.45;
-    margin-bottom: 14px;
-}
-
-.alert-danger {
-    color: #C1440E;
-}
-
-.alert-success {
-    color: #3A6B35;
-}
-
-/* LIVE PRESENCE — "people viewing this" widgets */
-.live-viewers {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    color: #3A6B35;
-    background-color: #E7F0E5;
-    border-radius: 999px;
-    padding: 5px 12px;
-    margin-top: 10px;
-}
-
-.live-viewers .live-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background-color: #3A6B35;
-    animation: livePulse 1.6s infinite ease-in-out;
-}
-
-@keyframes livePulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.8); }
-}
-
-.activity-panel {
-    background-color: #FFFFFF;
-    border: 1px solid #E4DDCC;
-    border-radius: 12px;
-    padding: 20px 22px;
-    margin-top: 24px;
-}
-
-.activity-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 9px 0;
-    border-bottom: 1px solid #F0EBDD;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-}
-
-.activity-row:last-child {
-    border-bottom: none;
-}
-
-.activity-count {
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 600;
-    color: #3A6B35;
-    background-color: #E7F0E5;
-    border-radius: 999px;
-    padding: 2px 10px;
-}
-
-.product-image img,
-.detail-image img,
-.table-swatch img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: inherit;
-}
-
-.nav-user {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.nav-user-name {
-    color: #F6F1E7;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    white-space: nowrap;
-}
-
-.btn-logout {
-    border: 1px solid #F6F1E7;
-    color: #F6F1E7;
-    border-radius: 999px;
-    padding: 7px 18px;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    background: transparent;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.btn-logout:hover {
-    background-color: #F6F1E7;
-    color: #1F3A5F;
-}
-
-.dropzone-preview {
-    width: 100%;
-    max-height: 180px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-top: 10px;
-    display: none;
-}
-
-/* Account dropdown — Jumia-style "Hi, Name ⌄" menu */
-.btn-account-toggle {
-    background: transparent;
-    border: none;
-    color: #F6F1E7;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 6px 4px;
-    cursor: pointer;
-}
-
-.nav-account-menu {
-    min-width: 190px;
-    border-radius: 10px;
-    border: 1px solid #E4DDCC;
-    box-shadow: 0 12px 28px rgba(31, 58, 95, 0.15);
-    padding: 8px 0;
-    margin-top: 10px;
-}
-
-.nav-account-menu .dropdown-item {
-    font-family: 'Inter', sans-serif;
-    font-size: 13.5px;
-    color: #1C2321;
-    padding: 8px 18px;
-}
-
-.nav-account-menu .dropdown-item:hover {
-    background-color: #F6F1E7;
-}
-
-.nav-account-menu .nav-logout-item {
-    color: #C1440E;
-    font-weight: 600;
 }

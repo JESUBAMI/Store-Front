@@ -23,6 +23,7 @@
 
     <div class="admin-shell">
 
+        <!-- ===================== ADMIN SIDEBAR ===================== -->
         <aside class="admin-sidebar">
             <a class="brand-mark admin-brand" href="dashboard.html">Ò<span>j</span>à</a>
             <nav class="admin-nav">
@@ -33,6 +34,7 @@
             </nav>
         </aside>
 
+        <!-- ===================== PRODUCTS TABLE ===================== -->
         <main class="admin-main">
             <p class="admin-title">All products</p>
 
@@ -50,6 +52,7 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
+                    <!-- Filled in by loadProducts() below -->
                     <tbody id="productsTableBody">
                     </tbody>
                 </table>
@@ -60,6 +63,7 @@
     </div>
 
     <script>
+        // ===================== SETUP =====================
         const tableBody = document.getElementById("productsTableBody");
         const errorBox = document.getElementById("formError");
         const successBox = document.getElementById("formSuccess");
@@ -78,6 +82,7 @@
             errorBox.hidden = false;
         }
 
+        // ===================== LOAD + RENDER PRODUCTS =====================
         function loadProducts() {
             tableBody.innerHTML = "<tr><td colspan='5'>Loading...</td></tr>";
 
@@ -120,6 +125,7 @@
                         tableBody.appendChild(row);
                     });
 
+                    // ===== Delete button handlers =====
                     document.querySelectorAll(".table-action.danger").forEach(function (link) {
                         link.addEventListener("click", function (event) {
                             event.preventDefault();

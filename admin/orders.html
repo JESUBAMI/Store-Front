@@ -23,6 +23,7 @@
 
     <div class="admin-shell">
 
+        <!-- ===================== ADMIN SIDEBAR ===================== -->
         <aside class="admin-sidebar">
             <a class="brand-mark admin-brand" href="dashboard.html">Ò<span>j</span>à</a>
             <nav class="admin-nav">
@@ -33,6 +34,7 @@
             </nav>
         </aside>
 
+        <!-- ===================== ORDERS TABLE ===================== -->
         <main class="admin-main">
             <p class="admin-title">Orders</p>
 
@@ -51,6 +53,7 @@
                             <th>Action</th>
                         </tr>
                     </thead>
+                    <!-- Filled in by loadOrders() below -->
                     <tbody id="ordersTableBody">
                     </tbody>
                 </table>
@@ -61,6 +64,7 @@
     </div>
 
     <script>
+        // ===================== SETUP =====================
         const tableBody = document.getElementById("ordersTableBody");
         const errorBox = document.getElementById("formError");
         const successBox = document.getElementById("formSuccess");
@@ -78,6 +82,7 @@
             errorBox.hidden = false;
         }
 
+        // ===================== LOAD + RENDER ORDERS =====================
         function loadOrders() {
             tableBody.innerHTML = "<tr><td colspan='6'>Loading...</td></tr>";
 
@@ -100,6 +105,8 @@
                             ? '<span class="status-badge status-approved">Approved</span>'
                             : '<span class="status-badge status-pending">Pending</span>';
 
+                        // Pending orders get an Approve action (plus View);
+                        // approved orders just link to the finished receipt.
                         const action = order.status === "pending"
                             ? '<a href="#" class="table-action approve" data-id="' + doc.id + '">Approve</a> <a href="../store/receipt.html?id=' + doc.id + '" class="table-action" target="_blank">View</a>'
                             : '<a href="../store/receipt.html?id=' + doc.id + '" class="table-action" target="_blank">View receipt</a>';
@@ -116,6 +123,7 @@
                         tableBody.appendChild(row);
                     });
 
+                    // ===== Approve button handlers =====
                     document.querySelectorAll(".table-action.approve").forEach(function (link) {
                         link.addEventListener("click", function (event) {
                             event.preventDefault();

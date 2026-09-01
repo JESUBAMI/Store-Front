@@ -22,6 +22,7 @@
 
 <body>
 
+    <!-- ===================== NAVBAR ===================== -->
     <nav class="navbar navbar-expand-md navbar-market">
         <div class="container">
 
@@ -64,12 +65,14 @@
         </div>
     </nav>
 
+    <!-- ===================== CART ===================== -->
     <section class="cart-section">
         <div class="container">
             <h1 class="cart-title">Your Cart</h1>
 
             <p class="form-error alert alert-danger" id="orderError" hidden></p>
 
+            <!-- Filled in by render() below -->
             <div class="row gy-4" id="cartLayout">
             </div>
         </div>
@@ -77,39 +80,66 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // ===================== SETUP =====================
         const cartLayout = document.getElementById("cartLayout");
         const cartBadge = document.getElementById("cartBadge");
         const orderError = document.getElementById("orderError");
         const DELIVERY_FEE = 1500;
         const SELLER_WHATSAPP = "2347062729106";
+
         let currentUser = null;
-auth.onAuthStateChanged(function (user) {
-    const area = document.getElementById("navUserArea");
-    if (user) {
-        const displayName = user.displayName || user.email.split("@")[0];
-        area.innerHTML =
-            '<div class="dropdown nav-account-dropdown">' +
-            '<button class="btn-account-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">' +
-            'Hi, ' + displayName +
-            '</button>' +
-            '<ul class="dropdown-menu dropdown-menu-end nav-account-menu">' +
-            '<li><a class="dropdown-item" href="#">My Account</a></li>' +
-            '<li><a class="dropdown-item" href="#">Orders</a></li>' +
-            '<li><a class="dropdown-item" href="#">Inbox</a></li>' +
-            '<li><a class="dropdown-item" href="#">Wishlist</a></li>' +
-            '<li><a class="dropdown-item" href="#">Voucher</a></li>' +
-            '<li><hr class="dropdown-divider"></li>' +
-            '<li><a class="dropdown-item nav-logout-item" href="#" id="logoutBtn">Logout</a></li>' +
-            '</ul>' +
-            '</div>';
-        document.getElementById("logoutBtn").addEventListener("click", function (event) {
-            event.preventDefault();
-            auth.signOut().then(function () { window.location.href = "index.html"; });
+        let authResolved = false; // becomes true once Firebase has confirmed the session state
+
+        // ===================== NAVBAR: signed-in account area =====================
+        auth.onAuthStateChanged(function (user) {
+            currentUser = user;
+            authResolved = true;
+            updateCheckoutButtonState();
+
+            const area = document.getElementById("navUserArea");
+            if (user) {
+                const displayName = user.displayName || user.email.split("@")[0];
+                area.innerHTML =
+                    '<div class="dropdown nav-account-dropdown">' +
+                    '<button class="btn-account-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">' +
+                    'Hi, ' + displayName +
+                    '</button>' +
+                    '<ul class="dropdown-menu dropdown-menu-end nav-account-menu">' +
+                    '<li><a class="dropdown-item" href="#">My Account</a></li>' +
+                    '<li><a class="dropdown-item" href="#">Orders</a></li>' +
+                    '<li><a class="dropdown-item" href="#">Inbox</a></li>' +
+                    '<li><a class="dropdown-item" href="#">Wishlist</a></li>' +
+                    '<li><a class="dropdown-item" href="#">Voucher</a></li>' +
+                    '<li><hr class="dropdown-divider"></li>' +
+                    '<li><a class="dropdown-item nav-logout-item" href="#" id="logoutBtn">Logout</a></li>' +
+                    '</ul>' +
+                    '</div>';
+                document.getElementById("logoutBtn").addEventListener("click", function (event) {
+                    event.preventDefault();
+                    auth.signOut().then(function () { window.location.href = "index.html"; });
+                });
+            } else {
+                area.innerHTML = '<a href="login.html" class="btn-signin">Sign in</a>';
+            }
         });
-    } else {
-        area.innerHTML = '<a href="login.html" class="btn-signin">Sign in</a>';
-    }
-});
+
+        // Keeps the checkout button disabled with a neutral label until we
+        // genuinely know whether someone is signed in — prevents wrongly
+        // bouncing an already-logged-in person to the login page just
+        // because they clicked before Firebase finished checking.
+        function updateCheckoutButtonState() {
+            const btn = document.getElementById("checkoutBtn");
+            if (!btn) return;
+            if (!authResolved) {
+                btn.disabled = true;
+                btn.textContent = "Checking your session...";
+            } else {
+                btn.disabled = false;
+                btn.textContent = "Choose Payment Method";
+            }
+        }
+
+        // ===================== RENDER THE CART =====================
         function render() {
             const cart = getCart();
             cartBadge.textContent = getCartCount();
@@ -171,6 +201,10 @@ auth.onAuthStateChanged(function (user) {
                 '</div>' +
                 '</div>';
 
+            // A fresh checkout button just got created above — make sure
+            // it reflects whether we already know the sign-in state.
+            updateCheckoutButtonState();
+
             document.querySelectorAll(".qty-btn").forEach(function (btn) {
                 btn.addEventListener("click", function () {
                     const id = btn.getAttribute("data-id");
@@ -190,12 +224,16 @@ auth.onAuthStateChanged(function (user) {
             });
         }
 
+        // ===================== PLACE THE ORDER =====================
         function placeOrder(paymentMethod) {
             orderError.hidden = true;
             const cart = getCart();
             const subtotal = cart.reduce(function (sum, line) { return sum + line.price * line.quantity; }, 0);
             const total = subtotal + DELIVERY_FEE;
 
+            // A batch bundles "create the order" and "reduce stock on every
+            // item" into one atomic operation — either both succeed, or
+            // neither does, so the data can never end up half-updated.
             const batch = db.batch();
             const orderRef = db.collection("orders").doc();
 
@@ -238,8 +276,14 @@ auth.onAuthStateChanged(function (user) {
 
         render();
 
+        // ===================== CHECKOUT BUTTON + PAYMENT OPTION CLICKS =====================
         document.addEventListener("click", function (event) {
             if (event.target && event.target.id === "checkoutBtn") {
+                // Not signed in at all -> straight to the sign-in page.
+                // After signing in, login.html always redirects to
+                // index.html (the storefront homepage) — NOT back into
+                // this payment picker. The customer comes back to their
+                // cart on their own terms when they're ready.
                 if (!currentUser) {
                     window.location.href = "login.html";
                     return;

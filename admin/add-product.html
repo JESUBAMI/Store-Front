@@ -23,6 +23,7 @@
 
     <div class="admin-shell">
 
+        <!-- ===================== ADMIN SIDEBAR ===================== -->
         <aside class="admin-sidebar">
             <a class="brand-mark admin-brand" href="dashboard.html">Ò<span>j</span>à</a>
             <nav class="admin-nav">
@@ -33,6 +34,7 @@
             </nav>
         </aside>
 
+        <!-- ===================== ADD PRODUCT FORM ===================== -->
         <main class="admin-main">
             <p class="admin-title">Add a product</p>
 
@@ -41,6 +43,7 @@
 
             <form class="product-form" id="addProductForm">
 
+                <!-- Photo upload: resized + compressed in-browser before saving -->
                 <label class="dropzone" for="productPhoto" id="dropzoneLabel">
                     <span id="dropzoneText">Click to upload a product photo (optional)</span>
                     <img class="dropzone-preview" id="dropzonePreview" alt="Product preview">
@@ -91,6 +94,7 @@
     </div>
 
     <script>
+        // ===================== SETUP =====================
         const form = document.getElementById("addProductForm");
         const errorBox = document.getElementById("formError");
         const successBox = document.getElementById("formSuccess");
@@ -113,6 +117,12 @@
             successBox.hidden = true;
         }
 
+        // ===================== PHOTO UPLOAD + COMPRESSION =====================
+        // Resizes the chosen image down to MAX_PHOTO_WIDTH and re-encodes it
+        // as a compressed JPEG, entirely in the browser, before it's ever
+        // saved. Note: Firestore documents are capped at 1MiB — this keeps
+        // typical photos safely under that, but very large/detailed source
+        // images could still occasionally push close to the limit.
         const photoInput = document.getElementById("productPhoto");
         const dropzonePreview = document.getElementById("dropzonePreview");
         const dropzoneText = document.getElementById("dropzoneText");
@@ -153,6 +163,7 @@
             reader.readAsDataURL(file);
         });
 
+        // ===================== SAVE PRODUCT =====================
         form.addEventListener("submit", function (event) {
             event.preventDefault();
             clearMessages();

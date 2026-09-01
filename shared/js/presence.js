@@ -1,7 +1,14 @@
+// =========================================================
 // PRESENCE — lightweight "who's viewing what right now" tracker.
-const PRESENCE_STALE_MS = 60 * 1000;
-const PRESENCE_HEARTBEAT_MS = 20 * 1000;
+// Not tied to any account — every browser tab gets its own random
+// session ID, and its Firestore doc just says "this session is
+// looking at product X, as of this timestamp".
+// =========================================================
 
+const PRESENCE_STALE_MS = 60 * 1000;      // a session counts as "gone" after 60s of silence
+const PRESENCE_HEARTBEAT_MS = 20 * 1000;  // re-confirm "still here" every 20s
+
+// --- Give this browser tab a stable random ID for the session ---
 function getSessionId() {
     let id = sessionStorage.getItem("ojaSessionId");
     if (!id) {
@@ -13,6 +20,7 @@ function getSessionId() {
 
 let presenceInterval = null;
 
+// --- Call this on a product page to start reporting "I'm viewing this" ---
 function startWatchingProduct(productId, productName) {
     const sessionId = getSessionId();
     const ref = db.collection("presence").doc(sessionId);
@@ -28,10 +36,12 @@ function startWatchingProduct(productId, productName) {
     beat();
     presenceInterval = setInterval(beat, PRESENCE_HEARTBEAT_MS);
 
+    // Clean up immediately if the tab closes or navigates away.
     window.addEventListener("beforeunload", function () {
         ref.delete().catch(function () { });
     });
 
+    // Pause the heartbeat while the tab is in the background, resume when it's back.
     document.addEventListener("visibilitychange", function () {
         if (document.visibilityState === "hidden") {
             ref.delete().catch(function () { });
@@ -42,6 +52,7 @@ function startWatchingProduct(productId, productName) {
     });
 }
 
+// --- Call this when leaving a product page ---
 function stopWatchingProduct() {
     if (presenceInterval) {
         clearInterval(presenceInterval);
@@ -50,6 +61,7 @@ function stopWatchingProduct() {
     db.collection("presence").doc(getSessionId()).delete().catch(function () { });
 }
 
+// --- Live viewer count for ONE product (used on product.html) ---
 function watchViewersForProduct(productId, onUpdate) {
     return db.collection("presence")
         .where("productId", "==", productId)
@@ -64,6 +76,7 @@ function watchViewersForProduct(productId, onUpdate) {
         });
 }
 
+// --- Live activity across ALL products (used on the admin dashboard) ---
 function watchAllActivity(onUpdate) {
     return db.collection("presence").onSnapshot(function (snapshot) {
         const cutoff = Date.now() - PRESENCE_STALE_MS;
