@@ -21,7 +21,6 @@
 
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-md navbar-market">
         <div class="container">
 
@@ -45,19 +44,16 @@
                 </div>
 
                 <div class="d-flex align-items-center gap-4 justify-content-between justify-content-md-end">
-                    <!-- FIX: this span was missing entirely before, so the page's
-                         own script (document.querySelector(".cart-badge")...) was
-                         crashing on every load because there was nothing to select. -->
                     <a href="cart.html" class="nav-icon-btn" aria-label="Cart">
-                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M4 6.5H18L17 16.5C16.9 17.6 16 18.4 14.9 18.4H7.1C6 18.4 5.1 17.6 5 16.5L4 6.5Z"
-                                stroke="#F6F1E7" stroke-width="1.4" stroke-linejoin="round" />
-                            <path d="M7.5 6.5V5.2C7.5 3.4 9 2 10.7 2H11.3C13 2 14.5 3.4 14.5 5.2V6.5" stroke="#F6F1E7"
-                                stroke-width="1.4" />
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M3 4H5L7.5 15.5C7.6 16.1 8.1 16.5 8.7 16.5H18.3C18.9 16.5 19.4 16.1 19.5 15.5L21 7H6"
+                                stroke="#F6F1E7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                            <circle cx="9" cy="20" r="1.4" fill="#F6F1E7" />
+                            <circle cx="18" cy="20" r="1.4" fill="#F6F1E7" />
                         </svg>
                         <span class="cart-badge" id="cartBadge">0</span>
                     </a>
-                    <!-- FIX: was a hardcoded "Sign in" link with no logged-in state at all -->
                     <div id="navUserArea">
                         <a href="login.html" class="btn-signin">Sign in</a>
                     </div>
@@ -67,7 +63,6 @@
         </div>
     </nav>
 
-    <!-- Category pills -->
     <div class="category-row">
         <div class="container">
             <div class="category-scroll">
@@ -83,7 +78,6 @@
         </div>
     </div>
 
-    <!-- Hero -->
     <section class="hero">
         <div class="container">
             <div class="row align-items-center gy-5">
@@ -98,7 +92,6 @@
                         <a href="#" class="link-underline">Browse categories &rarr;</a>
                     </div>
                 </div>
-                <!-- add image here -->
                 <div class="col-md-5">
                     <div class="receipt-card">
                         <p class="receipt-brand">ÒJÀ</p>
@@ -119,7 +112,6 @@
     </section>
     <div class="torn-edge"></div>
 
-    <!-- Products -->
     <section class="products">
         <div class="container">
             <div class="section-head">
@@ -130,11 +122,6 @@
         </div>
     </section>
 
-
-
-
-
-    <!-- Footer -->
     <footer class="site-footer">
         <div class="container">
             <div class="footer-top">
@@ -195,8 +182,6 @@
                         ? '<p class="product-stock out-of-stock">Currently unavailable</p>'
                         : '<p class="product-stock"><span class="stock-dot"></span>' + product.quantity + ' in stock</p>';
 
-                    // FIX: show the uploaded photo when there is one, otherwise
-                    // fall back to the original placeholder-color block.
                     const imageInner = product.photoUrl
                         ? '<img src="' + product.photoUrl + '" alt="' + product.name + '">'
                         : '<span class="product-image-label">' + (product.category || "Product") + '</span>';
@@ -228,15 +213,27 @@
 
         document.getElementById("cartBadge").textContent = getCartCount();
 
-        // NEW: swap "Sign in" for the user's name + a Log out button once signed in
         auth.onAuthStateChanged(function (user) {
             const area = document.getElementById("navUserArea");
             if (user) {
-                area.innerHTML = '<div class="nav-user">' +
-                    '<span class="nav-user-name">' + (user.displayName || user.email) + '</span>' +
-                    '<button type="button" class="btn-logout" id="logoutBtn">Log out</button>' +
+                const displayName = user.displayName || user.email.split("@")[0];
+                area.innerHTML =
+                    '<div class="dropdown nav-account-dropdown">' +
+                    '<button class="btn-account-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">' +
+                    'Hi, ' + displayName +
+                    '</button>' +
+                    '<ul class="dropdown-menu dropdown-menu-end nav-account-menu">' +
+                    '<li><a class="dropdown-item" href="#">My Account</a></li>' +
+                    '<li><a class="dropdown-item" href="#">Orders</a></li>' +
+                    '<li><a class="dropdown-item" href="#">Inbox</a></li>' +
+                    '<li><a class="dropdown-item" href="#">Wishlist</a></li>' +
+                    '<li><a class="dropdown-item" href="#">Voucher</a></li>' +
+                    '<li><hr class="dropdown-divider"></li>' +
+                    '<li><a class="dropdown-item nav-logout-item" href="#" id="logoutBtn">Logout</a></li>' +
+                    '</ul>' +
                     '</div>';
-                document.getElementById("logoutBtn").addEventListener("click", function () {
+                document.getElementById("logoutBtn").addEventListener("click", function (event) {
+                    event.preventDefault();
                     auth.signOut().then(function () { window.location.href = "index.html"; });
                 });
             } else {

@@ -1593,47 +1593,26 @@ a {
 }
 
 
-/* ============================================
-   ALERTS — form feedback (error / success)
-   Added: replaces the unstyled .form-error box
-   with proper alert-danger / alert-success states
-   ============================================ */
-
+/* ALERTS — plain colored text, no box. Hidden by default via the HTML
+   "hidden" attribute; only shown once the JS decides there's something
+   to say. */
 .alert {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 11px 14px;
-    border-radius: 8px;
     font-family: 'Inter', sans-serif;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1.45;
-    margin-bottom: 18px;
-    border: 1px solid transparent;
+    margin-bottom: 14px;
 }
 
 .alert-danger {
-    background-color: #FBEAE3;
-    color: #8A2E0A;
-    border-color: #EFC4AE;
+    color: #C1440E;
 }
 
 .alert-success {
-    background-color: #E7F0E5;
-    color: #244A21;
-    border-color: #B9D4B4;
+    color: #3A6B35;
 }
 
-.form-error.alert-danger,
-.form-success.alert-success {
-    display: flex;
-}
-
-/* ============================================
-   LIVE PRESENCE — "people viewing this" widgets
-   ============================================ */
-
+/* LIVE PRESENCE — "people viewing this" widgets */
 .live-viewers {
     display: inline-flex;
     align-items: center;
@@ -1657,17 +1636,8 @@ a {
 }
 
 @keyframes livePulse {
-
-    0%,
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: 0.4;
-        transform: scale(0.8);
-    }
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
 }
 
 .activity-panel {
@@ -1701,7 +1671,6 @@ a {
     padding: 2px 10px;
 }
 
-/* Product image (used when a product has an uploaded photo) */
 .product-image img,
 .detail-image img,
 .table-swatch img {
@@ -1711,7 +1680,6 @@ a {
     border-radius: inherit;
 }
 
-/* Auth-aware nav area */
 .nav-user {
     display: flex;
     align-items: center;
@@ -1745,7 +1713,6 @@ a {
     color: #1F3A5F;
 }
 
-/* Image upload dropzone (active state) */
 .dropzone-preview {
     width: 100%;
     max-height: 180px;
@@ -1753,4 +1720,41 @@ a {
     border-radius: 10px;
     margin-top: 10px;
     display: none;
+}
+
+/* Account dropdown — Jumia-style "Hi, Name ⌄" menu */
+.btn-account-toggle {
+    background: transparent;
+    border: none;
+    color: #F6F1E7;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 4px;
+    cursor: pointer;
+}
+
+.nav-account-menu {
+    min-width: 190px;
+    border-radius: 10px;
+    border: 1px solid #E4DDCC;
+    box-shadow: 0 12px 28px rgba(31, 58, 95, 0.15);
+    padding: 8px 0;
+    margin-top: 10px;
+}
+
+.nav-account-menu .dropdown-item {
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    color: #1C2321;
+    padding: 8px 18px;
+}
+
+.nav-account-menu .dropdown-item:hover {
+    background-color: #F6F1E7;
+}
+
+.nav-account-menu .nav-logout-item {
+    color: #C1440E;
+    font-weight: 600;
 }

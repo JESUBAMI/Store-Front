@@ -20,14 +20,12 @@
 
 <body>
 
-    <!-- Auth header -->
     <header class="auth-header">
         <div class="container">
             <a class="brand-mark" href="login.html">Ò<span>j</span>à</a>
         </div>
     </header>
 
-    <!-- Admin sign in -->
     <div class="auth-wrap">
         <div class="auth-card">
             <p class="auth-title">Admin sign in</p>
@@ -82,10 +80,6 @@
             errorBox.textContent = "";
         }
 
-        // FIX: this used to check the role then do nothing — the redirect
-        // line was commented out, so a correct admin login just sat on this
-        // page forever with no visible error and no way forward. That was
-        // the actual "I cannot sign in as admin" bug.
         function checkAdminAndEnter(uid) {
             return db.collection("users").doc(uid).get().then(function (doc) {
                 if (!doc.exists || doc.data().role !== "admin") {

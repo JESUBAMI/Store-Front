@@ -23,7 +23,6 @@
 
     <div class="admin-shell">
 
-        <!-- Admin sidebar -->
         <aside class="admin-sidebar">
             <a class="brand-mark admin-brand" href="dashboard.html">Ò<span>j</span>à</a>
             <nav class="admin-nav">
@@ -34,7 +33,6 @@
             </nav>
         </aside>
 
-        <!-- Admin main -->
         <main class="admin-main">
             <p class="admin-title">All products</p>
 
@@ -98,8 +96,6 @@
                         const color = swatchColors[index % swatchColors.length];
                         const displayPrice = product.discountPrice || product.price;
 
-                        // FIX: use the uploaded photo when one exists, otherwise
-                        // keep the original placeholder-color swatch.
                         const swatchInner = product.photoUrl
                             ? '<img src="' + product.photoUrl + '" alt="">'
                             : "";

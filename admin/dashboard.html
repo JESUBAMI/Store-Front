@@ -57,7 +57,6 @@
                 <div id="chartContainer"></div>
             </div>
 
-            <!-- NEW: live "who's on the site right now" panel, powered by presence.js -->
             <div class="activity-panel">
                 <p class="chart-label">Live on site right now</p>
                 <div id="liveActivityList">
@@ -164,7 +163,6 @@
             }).join("");
         });
 
-        // NEW: live activity feed — updates in real time as clients open/close product pages
         watchAllActivity(function (list) {
             const container = document.getElementById("liveActivityList");
 

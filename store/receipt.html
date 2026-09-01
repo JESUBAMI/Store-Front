@@ -22,7 +22,6 @@
 
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-md navbar-market">
         <div class="container">
 
@@ -47,11 +46,12 @@
 
                 <div class="d-flex align-items-center gap-4 justify-content-between justify-content-md-end">
                     <a href="cart.html" class="nav-icon-btn" aria-label="Cart">
-                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M4 6.5H18L17 16.5C16.9 17.6 16 18.4 14.9 18.4H7.1C6 18.4 5.1 17.6 5 16.5L4 6.5Z"
-                                stroke="#F6F1E7" stroke-width="1.4" stroke-linejoin="round" />
-                            <path d="M7.5 6.5V5.2C7.5 3.4 9 2 10.7 2H11.3C13 2 14.5 3.4 14.5 5.2V6.5" stroke="#F6F1E7"
-                                stroke-width="1.4" />
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M3 4H5L7.5 15.5C7.6 16.1 8.1 16.5 8.7 16.5H18.3C18.9 16.5 19.4 16.1 19.5 15.5L21 7H6"
+                                stroke="#F6F1E7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                            <circle cx="9" cy="20" r="1.4" fill="#F6F1E7" />
+                            <circle cx="18" cy="20" r="1.4" fill="#F6F1E7" />
                         </svg>
                         <span class="cart-badge" id="cartBadge">0</span>
                     </a>
@@ -64,7 +64,6 @@
         </div>
     </nav>
 
-    <!-- Receipt -->
     <section class="receipt-page">
         <div class="container">
             <div class="receipt-page-inner" id="receiptContainer">
@@ -114,27 +113,27 @@
 
                     const bankPanel = showBankDetails
                         ? '<div class="bank-details">' +
-                            '<p class="bank-details-title">Pay to this account</p>' +
-                            '<p class="bank-details-line"><strong>Bank:</strong> Your Bank Name</p>' +
-                            '<p class="bank-details-line"><strong>Account Number:</strong> 0123456789</p>' +
-                            '<p class="bank-details-line"><strong>Account Name:</strong> Your Business Name</p>' +
-                            '<p class="payment-disclaimer">Only pay to this exact account. We are not responsible for payments made elsewhere.</p>' +
-                          '</div>'
+                        '<p class="bank-details-title">Pay to this account</p>' +
+                        '<p class="bank-details-line"><strong>Bank:</strong> Your Bank Name</p>' +
+                        '<p class="bank-details-line"><strong>Account Number:</strong> 0123456789</p>' +
+                        '<p class="bank-details-line"><strong>Account Name:</strong> Your Business Name</p>' +
+                        '<p class="payment-disclaimer">Only pay to this exact account. We are not responsible for payments made elsewhere.</p>' +
+                        '</div>'
                         : '';
 
                     receiptContainer.innerHTML =
                         '<p class="receipt-page-eyebrow">Order status: ' + stampText + '</p>' +
                         '<h1 class="receipt-page-title">Your Receipt</h1>' +
                         '<div class="receipt-card receipt-card-flat">' +
-                            '<p class="receipt-brand">ÒJÀ</p>' +
-                            '<p class="receipt-meta">RECEIPT NO. ' + doc.id.slice(0, 6).toUpperCase() + ' &middot; ' + orderDate + '</p>' +
-                            '<div class="receipt-rule"></div>' +
-                            itemLines +
-                            '<div class="receipt-line"><span>Delivery</span><span>&#8358;' + order.deliveryFee.toLocaleString() + '</span></div>' +
-                            '<div class="receipt-rule"></div>' +
-                            '<div class="receipt-line receipt-total"><span>TOTAL</span><span>&#8358;' + order.total.toLocaleString() + '</span></div>' +
-                            '<p class="receipt-footer">' + footerText + '</p>' +
-                            '<span class="receipt-stamp ' + stampClass + '">' + stampText + '</span>' +
+                        '<p class="receipt-brand">ÒJÀ</p>' +
+                        '<p class="receipt-meta">RECEIPT NO. ' + doc.id.slice(0, 6).toUpperCase() + ' &middot; ' + orderDate + '</p>' +
+                        '<div class="receipt-rule"></div>' +
+                        itemLines +
+                        '<div class="receipt-line"><span>Delivery</span><span>&#8358;' + order.deliveryFee.toLocaleString() + '</span></div>' +
+                        '<div class="receipt-rule"></div>' +
+                        '<div class="receipt-line receipt-total"><span>TOTAL</span><span>&#8358;' + order.total.toLocaleString() + '</span></div>' +
+                        '<p class="receipt-footer">' + footerText + '</p>' +
+                        '<span class="receipt-stamp ' + stampClass + '">' + stampText + '</span>' +
                         '</div>' +
                         bankPanel +
                         '<a href="index.html" class="receipt-page-back">Continue shopping &rarr;</a>';
