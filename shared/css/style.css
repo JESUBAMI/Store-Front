@@ -932,6 +932,14 @@ a {
     padding: 40px 16px;
 }
 
+.auth-page {
+    min-height: calc(100vh - 64px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+}
+
 .auth-card {
     background-color: #FFFFFF;
     border: 1px solid #E4DDCC;
