@@ -97,11 +97,8 @@
                     'Hi, ' + displayName +
                     '</button>' +
                     '<ul class="dropdown-menu dropdown-menu-end nav-account-menu">' +
-                    '<li><a class="dropdown-item" href="#">My Account</a></li>' +
-                    '<li><a class="dropdown-item" href="#">Orders</a></li>' +
-                    '<li><a class="dropdown-item" href="#">Inbox</a></li>' +
-                    '<li><a class="dropdown-item" href="#">Wishlist</a></li>' +
-                    '<li><a class="dropdown-item" href="#">Voucher</a></li>' +
+                    '<li><a class="dropdown-item" href="account.html">My Account</a></li>' +
+                    '<li><a class="dropdown-item" href="orders.html">Orders</a></li>' +
                     '<li><hr class="dropdown-divider"></li>' +
                     '<li><a class="dropdown-item nav-logout-item" href="#" id="logoutBtn">Logout</a></li>' +
                     '</ul>' +
@@ -154,17 +151,25 @@
                     const imageStyle = product.photoUrl ? "" : "background-color:#E7DCC3;";
 
                     productContainer.innerHTML =
-                        '<div class="row gy-4">' +
-                        '<div class="col-md-6">' +
+                        '<div class="row gy-4 detail-layout">' +
+                        '<div class="col-lg-6">' +
+                        '<div class="detail-image-card">' +
                         '<div class="detail-image" style="' + imageStyle + '">' +
                         imageInner +
                         '</div>' +
                         '</div>' +
-                        '<div class="col-md-6">' +
+                        '</div>' +
+                        '<div class="col-lg-6">' +
+                        '<div class="detail-info-card">' +
                         '<p class="detail-eyebrow">' + (product.category || "General") + '</p>' +
                         '<h1 class="detail-title">' + product.name + '</h1>' +
                         '<div class="detail-price-row">' + priceRow + '</div>' +
                         stockRow +
+                        '<div class="detail-meta">' +
+                        '<span>Free delivery</span>' +
+                        '<span>Fast response</span>' +
+                        '<span>Secure payment</span>' +
+                        '</div>' +
                         '<p class="detail-description">' + (product.description || "No description provided for this product yet.") + '</p>' +
                         '<div class="detail-qty-row">' +
                         '<label class="form-label">Quantity</label>' +
@@ -174,20 +179,19 @@
                         '<button type="button" class="qty-btn" aria-label="Increase quantity">+</button>' +
                         '</div>' +
                         '</div>' +
+                        '<div class="detail-actions">' +
                         orderButton +
+                        '<a href="index.html" class="detail-secondary-link">Continue shopping</a>' +
+                        '</div>' +
                         '<div id="liveViewersBox"></div>' +
+                        '<div class="detail-benefits">' +
+                        '<span>Ready to ship when approved</span>' +
+                        '<span>Built for easy checkout</span>' +
+                        '<span>Seller-managed stock updates</span>' +
+                        '</div>' +
+                        '</div>' +
                         '</div>' +
                         '</div>';
-
-                    // ===================== LIVE VIEWER COUNT =====================
-                    startWatchingProduct(productId, product.name);
-                    watchViewersForProduct(productId, function (count) {
-                        const box = document.getElementById("liveViewersBox");
-                        if (!box) return;
-                        box.innerHTML = count > 0
-                            ? '<div class="live-viewers"><span class="live-dot"></span>' + count + (count === 1 ? " person viewing this now" : " people viewing this now") + '</div>'
-                            : "";
-                    });
 
                     // ===================== QUANTITY STEPPER + ADD TO CART =====================
                     if (!isSoldOut) {

@@ -10,6 +10,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap"
         rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../shared/css/style.css">
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -41,6 +42,33 @@
             <p class="form-error alert alert-danger" id="formError" hidden></p>
             <p class="form-success alert alert-success" id="formSuccess" hidden></p>
 
+            <!-- ===================== STATS ===================== -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-text text-muted mb-1">Pending Orders</p>
+                            <p class="card-title" style="font-size: 28px; font-weight: bold; color: #E3A008;" id="pendingCount">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-text text-muted mb-1">Total Revenue</p>
+                            <p class="card-title" style="font-size: 28px; font-weight: bold; color: #3A6B35;" id="totalRevenue">₦0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================== FILTERS ===================== -->
+            <div class="mb-3">
+                <button class="btn btn-outline-secondary filter-btn active" data-filter="all">All Orders</button>
+                <button class="btn btn-outline-warning filter-btn" data-filter="pending">Pending</button>
+                <button class="btn btn-outline-success filter-btn" data-filter="approved">Approved</button>
+            </div>
+
             <div class="products-table-wrap">
                 <table class="products-table">
                     <thead>
@@ -49,6 +77,7 @@
                             <th>Customer</th>
                             <th>Items</th>
                             <th>Amount</th>
+                            <th>Payment</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -63,11 +92,34 @@
 
     </div>
 
+    <!-- ===================== ORDER DETAILS MODAL ===================== -->
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderDetailsLabel">Order Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="orderDetailsContent">Loading...</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="approveOrderBtn" style="display:none;">Approve Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // ===================== SETUP =====================
         const tableBody = document.getElementById("ordersTableBody");
         const errorBox = document.getElementById("formError");
         const successBox = document.getElementById("formSuccess");
+        let allOrders = [];
+        let currentFilter = "all";
+        const orderDetailsModal = new bootstrap.Modal(document.getElementById("orderDetailsModal"));
 
         function flashSuccess(message) {
             errorBox.hidden = true;
@@ -84,62 +136,42 @@
 
         // ===================== LOAD + RENDER ORDERS =====================
         function loadOrders() {
-            tableBody.innerHTML = "<tr><td colspan='6'>Loading...</td></tr>";
+            tableBody.innerHTML = "<tr><td colspan='7'>Loading...</td></tr>";
 
             db.collection("orders").orderBy("createdAt", "desc").get()
                 .then(function (snapshot) {
                     tableBody.innerHTML = "";
+                    allOrders = [];
 
                     if (snapshot.empty) {
-                        tableBody.innerHTML = "<tr><td colspan='6'>No orders yet.</td></tr>";
+                        tableBody.innerHTML = "<tr><td colspan='7'>No orders yet.</td></tr>";
+                        updateStats();
                         return;
                     }
 
+                    // Store all orders for filtering
                     snapshot.docs.forEach(function (doc) {
-                        const order = doc.data();
-                        const itemsSummary = order.items.map(function (item) {
-                            return item.quantity + "x " + item.name;
-                        }).join(", ");
-
-                        const statusBadge = order.status === "approved"
-                            ? '<span class="status-badge status-approved">Approved</span>'
-                            : '<span class="status-badge status-pending">Pending</span>';
-
-                        // Pending orders get an Approve action (plus View);
-                        // approved orders just link to the finished receipt.
-                        const action = order.status === "pending"
-                            ? '<a href="#" class="table-action approve" data-id="' + doc.id + '">Approve</a> <a href="../store/receipt.html?id=' + doc.id + '" class="table-action" target="_blank">View</a>'
-                            : '<a href="../store/receipt.html?id=' + doc.id + '" class="table-action" target="_blank">View receipt</a>';
-
-                        const row = document.createElement("tr");
-                        row.innerHTML =
-                            '<td>#' + doc.id.slice(0, 6).toUpperCase() + '</td>' +
-                            '<td>' + order.customerEmail + '</td>' +
-                            '<td>' + itemsSummary + '</td>' +
-                            '<td>&#8358;' + order.total.toLocaleString() + '</td>' +
-                            '<td>' + statusBadge + '</td>' +
-                            '<td>' + action + '</td>';
-
-                        tableBody.appendChild(row);
+                        allOrders.push({
+                            id: doc.id,
+                            ...doc.data()
+                        });
                     });
 
-                    // ===== Approve button handlers =====
-                    document.querySelectorAll(".table-action.approve").forEach(function (link) {
-                        link.addEventListener("click", function (event) {
-                            event.preventDefault();
-                            const id = link.getAttribute("data-id");
-                            db.collection("orders").doc(id).update({
-                                status: "approved",
-                                approvedAt: firebase.firestore.FieldValue.serverTimestamp()
-                            }).then(function () {
-                                flashSuccess("Order approved.");
-                                loadOrders();
-                            }).catch(function (error) {
-                                const message = error.code === "permission-denied"
-                                    ? "Firestore blocked this update — check your security rules and that your account has role: admin."
-                                    : "Could not approve this order.";
-                                flashError(message);
+                    // Update stats
+                    updateStats();
+
+                    // Render filtered orders
+                    renderFilteredOrders();
+
+                    // Add filter button listeners
+                    document.querySelectorAll(".filter-btn").forEach(function (btn) {
+                        btn.addEventListener("click", function () {
+                            document.querySelectorAll(".filter-btn").forEach(function (b) {
+                                b.classList.remove("active");
                             });
+                            this.classList.add("active");
+                            currentFilter = this.getAttribute("data-filter");
+                            renderFilteredOrders();
                         });
                     });
                 })
@@ -147,9 +179,167 @@
                     const message = error.code === "permission-denied"
                         ? "Firestore blocked this read — check your security rules and that your account has role: admin."
                         : "Could not load orders.";
-                    tableBody.innerHTML = "<tr><td colspan='6'>" + message + "</td></tr>";
+                    tableBody.innerHTML = "<tr><td colspan='7'>" + message + "</td></tr>";
                 });
         }
+
+        // ===================== UPDATE STATS =====================
+        function updateStats() {
+            const pendingCount = allOrders.filter(function (o) { return o.status === "pending"; }).length;
+            const totalRevenue = allOrders.reduce(function (sum, o) { return sum + (o.total || 0); }, 0);
+
+            document.getElementById("pendingCount").textContent = pendingCount;
+            document.getElementById("totalRevenue").textContent = "₦" + totalRevenue.toLocaleString();
+        }
+
+        // ===================== RENDER FILTERED ORDERS =====================
+        function renderFilteredOrders() {
+            tableBody.innerHTML = "";
+
+            const filtered = allOrders.filter(function (order) {
+                if (currentFilter === "all") return true;
+                return order.status === currentFilter;
+            });
+
+            if (filtered.length === 0) {
+                tableBody.innerHTML = "<tr><td colspan='7'>No orders found.</td></tr>";
+                return;
+            }
+
+            filtered.forEach(function (order) {
+                const itemsSummary = order.items.map(function (item) {
+                    return item.quantity + "x " + item.name;
+                }).join(", ");
+
+                const statusBadge = order.status === "approved"
+                    ? '<span class="status-badge status-approved">Approved</span>'
+                    : '<span class="status-badge status-pending">Pending</span>';
+
+                const paymentBadge = order.paymentMethod === "whatsapp"
+                    ? '<span class="badge bg-success">WhatsApp</span>'
+                    : '<span class="badge bg-info">Bank Transfer</span>';
+
+                // Pending orders get an Approve action (plus View);
+                // approved orders just link to the finished receipt.
+                const action = order.status === "pending"
+                    ? '<a href="#" class="table-action approve" data-id="' + order.id + '">Approve</a> <a href="#" class="table-action view-order" data-id="' + order.id + '">Details</a>'
+                    : '<a href="#" class="table-action view-order" data-id="' + order.id + '">Details</a>';
+
+                const row = document.createElement("tr");
+                row.innerHTML =
+                    '<td>#' + order.id.slice(0, 6).toUpperCase() + '</td>' +
+                    '<td>' + order.customerEmail + '</td>' +
+                    '<td>' + itemsSummary + '</td>' +
+                    '<td>₦' + order.total.toLocaleString() + '</td>' +
+                    '<td>' + paymentBadge + '</td>' +
+                    '<td>' + statusBadge + '</td>' +
+                    '<td>' + action + '</td>';
+
+                tableBody.appendChild(row);
+            });
+
+            // ===== Approve button handlers =====
+            document.querySelectorAll(".table-action.approve").forEach(function (link) {
+                link.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    const id = link.getAttribute("data-id");
+                    db.collection("orders").doc(id).update({
+                        status: "approved",
+                        approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }).then(function () {
+                        flashSuccess("Order approved.");
+                        loadOrders();
+                    }).catch(function (error) {
+                        const message = error.code === "permission-denied"
+                            ? "Firestore blocked this update — check your security rules and that your account has role: admin."
+                            : "Could not approve this order.";
+                        flashError(message);
+                    });
+                });
+            });
+
+            // ===== View order details handlers =====
+            document.querySelectorAll(".table-action.view-order").forEach(function (link) {
+                link.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    const orderId = link.getAttribute("data-id");
+                    showOrderDetails(orderId);
+                });
+            });
+        }
+
+        // ===================== SHOW ORDER DETAILS MODAL =====================
+        function showOrderDetails(orderId) {
+            const order = allOrders.find(function (o) { return o.id === orderId; });
+            if (!order) return;
+
+            const itemsHTML = order.items.map(function (item) {
+                return '<tr><td>' + item.name + '</td><td>' + item.quantity + 'x</td><td>₦' + item.price.toLocaleString() + '</td><td>₦' + (item.price * item.quantity).toLocaleString() + '</td></tr>';
+            }).join("");
+
+            const paymentInfo = order.paymentMethod === "whatsapp"
+                ? 'WhatsApp (Seller will send payment details via WhatsApp)'
+                : 'Bank Transfer';
+
+            const orderDate = order.createdAt
+                ? new Date(order.createdAt.toDate()).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })
+                : "Unknown";
+
+            const approveBtn = document.getElementById("approveOrderBtn");
+            if (order.status === "pending") {
+                approveBtn.style.display = "block";
+                approveBtn.setAttribute("data-id", orderId);
+            } else {
+                approveBtn.style.display = "none";
+            }
+
+            const content = `
+                <div style="margin-bottom: 20px;">
+                    <p><strong>Order ID:</strong> #${order.id.slice(0, 6).toUpperCase()}</p>
+                    <p><strong>Customer Email:</strong> ${order.customerEmail}</p>
+                    <p><strong>Date:</strong> ${orderDate}</p>
+                    <p><strong>Status:</strong> <span class="badge ${order.status === "pending" ? "bg-warning" : "bg-success"}">${order.status === "pending" ? "Pending" : "Approved"}</span></p>
+                    <p><strong>Payment Method:</strong> ${paymentInfo}</p>
+                </div>
+                <h6>Items Ordered:</h6>
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${itemsHTML}
+                    </tbody>
+                </table>
+                <div style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 10px;">
+                    <p style="text-align: right;"><strong>Subtotal:</strong> ₦${order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0).toLocaleString()}</p>
+                    <p style="text-align: right;"><strong>Delivery:</strong> ₦${order.deliveryFee.toLocaleString()}</p>
+                    <p style="text-align: right; font-size: 18px; color: #1F3A5F;"><strong>Total:</strong> ₦${order.total.toLocaleString()}</p>
+                </div>
+            `;
+
+            document.getElementById("orderDetailsContent").innerHTML = content;
+            orderDetailsModal.show();
+        }
+
+        // ===== Approve button in modal =====
+        document.getElementById("approveOrderBtn").addEventListener("click", function () {
+            const orderId = this.getAttribute("data-id");
+            db.collection("orders").doc(orderId).update({
+                status: "approved",
+                approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(function () {
+                flashSuccess("Order approved.");
+                orderDetailsModal.hide();
+                loadOrders();
+            }).catch(function (error) {
+                flashError("Could not approve this order.");
+            });
+        });
 
         loadOrders();
     </script>

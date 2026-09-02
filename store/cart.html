@@ -105,11 +105,8 @@
                     'Hi, ' + displayName +
                     '</button>' +
                     '<ul class="dropdown-menu dropdown-menu-end nav-account-menu">' +
-                    '<li><a class="dropdown-item" href="#">My Account</a></li>' +
-                    '<li><a class="dropdown-item" href="#">Orders</a></li>' +
-                    '<li><a class="dropdown-item" href="#">Inbox</a></li>' +
-                    '<li><a class="dropdown-item" href="#">Wishlist</a></li>' +
-                    '<li><a class="dropdown-item" href="#">Voucher</a></li>' +
+                    '<li><a class="dropdown-item" href="account.html">My Account</a></li>' +
+                    '<li><a class="dropdown-item" href="orders.html">Orders</a></li>' +
                     '<li><hr class="dropdown-divider"></li>' +
                     '<li><a class="dropdown-item nav-logout-item" href="#" id="logoutBtn">Logout</a></li>' +
                     '</ul>' +
@@ -156,6 +153,10 @@
                 const lineTotal = line.price * line.quantity;
                 subtotal += lineTotal;
 
+                // Safety check: ensure price and quantity are valid numbers
+                const price = parseFloat(line.price) || 0;
+                const quantity = parseInt(line.quantity) || 1;
+
                 itemsHTML +=
                     '<div class="cart-item">' +
                     '<div class="cart-item-image" style="background-color:#E7DCC3;">' +
@@ -163,10 +164,10 @@
                     '</div>' +
                     '<div class="cart-item-body">' +
                     '<p class="cart-item-title">' + line.name + '</p>' +
-                    '<p class="cart-item-price">&#8358;' + line.price.toLocaleString() + '</p>' +
+                    '<p class="cart-item-price">&#8358;' + price.toLocaleString() + '</p>' +
                     '<div class="qty-stepper">' +
                     '<button type="button" class="qty-btn" data-action="decrease" data-id="' + line.id + '">&minus;</button>' +
-                    '<input type="text" class="qty-input" value="' + line.quantity + '" readonly>' +
+                    '<input type="text" class="qty-input" value="' + quantity + '" readonly>' +
                     '<button type="button" class="qty-btn" data-action="increase" data-id="' + line.id + '">+</button>' +
                     '</div>' +
                     '</div>' +
@@ -227,7 +228,19 @@
         // ===================== PLACE THE ORDER =====================
         function placeOrder(paymentMethod) {
             orderError.hidden = true;
+
+            if (!currentUser) {
+                window.location.href = "login.html";
+                return;
+            }
+
             const cart = getCart();
+            if (cart.length === 0) {
+                orderError.textContent = "Your cart is empty.";
+                orderError.hidden = false;
+                return;
+            }
+
             const subtotal = cart.reduce(function (sum, line) { return sum + line.price * line.quantity; }, 0);
             const total = subtotal + DELIVERY_FEE;
 
@@ -279,11 +292,6 @@
         // ===================== CHECKOUT BUTTON + PAYMENT OPTION CLICKS =====================
         document.addEventListener("click", function (event) {
             if (event.target && event.target.id === "checkoutBtn") {
-                // Not signed in at all -> straight to the sign-in page.
-                // After signing in, login.html always redirects to
-                // index.html (the storefront homepage) — NOT back into
-                // this payment picker. The customer comes back to their
-                // cart on their own terms when they're ready.
                 if (!currentUser) {
                     window.location.href = "login.html";
                     return;
@@ -297,6 +305,10 @@
 
             const optionEl = event.target.closest(".payment-option");
             if (optionEl) {
+                document.querySelectorAll(".payment-option").forEach(function (card) {
+                    card.classList.remove("selected");
+                });
+                optionEl.classList.add("selected");
                 placeOrder(optionEl.getAttribute("data-method"));
             }
         });

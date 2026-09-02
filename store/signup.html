@@ -31,7 +31,9 @@
     <div class="auth-wrap">
         <div class="auth-card">
             <p class="auth-title">Create your account</p>
-            <p class="auth-sub">Sign up to order and track your receipts.</p>
+            <p class="auth-sub">Sign up to order, track receipts, and complete checkout faster.</p>
+
+            <div class="auth-banner">One account. Shop faster. Keep your receipts handy.</div>
 
             <!-- Google sign-up (fast path) -->
             <button type="button" class="btn-google" id="googleBtn">
@@ -51,26 +53,26 @@
             <div class="auth-divider"><span>or</span></div>
 
             <!-- Message boxes (filled in by JS, hidden by default) -->
-            <p class="form-error alert alert-danger" id="formError" hidden></p>
-            <p class="form-success alert alert-success" id="formSuccess" hidden></p>
+            <p class="form-error alert alert-danger" id="formError" aria-live="polite" hidden></p>
+            <p class="form-success alert alert-success" id="formSuccess" aria-live="polite" hidden></p>
 
             <!-- Email/password sign-up (slow path) -->
-            <form id="signupForm">
+            <form id="signupForm" novalidate>
                 <div class="form-group">
                     <label class="form-label" for="fullName">Full name</label>
-                    <input class="form-input" type="text" id="fullName" placeholder="Your name">
+                    <input class="form-input" type="text" id="fullName" placeholder="Your name" autocomplete="name" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="email">Email</label>
-                    <input class="form-input" type="email" id="email" placeholder="you@example.com">
+                    <input class="form-input" type="email" id="email" placeholder="you@example.com" autocomplete="email" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="password">Password</label>
-                    <input class="form-input" type="password" id="password" placeholder="********">
+                    <input class="form-input" type="password" id="password" placeholder="********" autocomplete="new-password" required minlength="6">
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="confirmPassword">Confirm password</label>
-                    <input class="form-input" type="password" id="confirmPassword" placeholder="********">
+                    <input class="form-input" type="password" id="confirmPassword" placeholder="********" autocomplete="new-password" required minlength="6">
                 </div>
 
                 <button class="btn-save" type="submit">Create account</button>

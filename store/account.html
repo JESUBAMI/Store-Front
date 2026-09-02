@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account — Òjà</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared/css/style.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="../shared/js/firebase-config.js"></script>
+    <script src="../shared/js/cart.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-market">
+        <div class="container">
+            <a class="brand-mark" href="index.html">Ò<span>j</span>à</a>
+            <div class="d-flex align-items-center gap-4 ms-auto">
+                <a href="cart.html" class="nav-icon-btn" aria-label="Cart">Cart <span class="cart-badge" id="cartBadge">0</span></a>
+                <a href="index.html" class="btn-signin">Shop</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="auth-page">
+        <div class="auth-card">
+            <p class="auth-kicker">Your account</p>
+            <p class="auth-title" id="accountName">Loading...</p>
+            <p class="auth-sub" id="accountEmail"></p>
+            <div class="auth-banner">Manage your orders and keep your shopping details close.</div>
+            <div class="d-grid gap-2">
+                <a href="orders.html" class="btn-save text-center">View my orders</a>
+                <button type="button" class="btn-google" id="logoutBtn">Sign out</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById("cartBadge").textContent = getCartCount();
+
+        auth.onAuthStateChanged(function (user) {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            document.getElementById("accountName").textContent = user.displayName || user.email.split("@")[0];
+            document.getElementById("accountEmail").textContent = user.email;
+        });
+
+        document.getElementById("logoutBtn").addEventListener("click", function () {
+            auth.signOut().then(function () {
+                window.location.href = "index.html";
+            });
+        });
+    </script>
+</body>
+
+</html>
