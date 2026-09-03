@@ -97,8 +97,8 @@
                     <p class="hero-sub">One seller, real stock, and a receipt generated the moment your order is
                         approved — not after.</p>
                     <div class="hero-cta">
-                        <a href="#" class="btn-primary-market">See what's in stock</a>
-                        <a href="#" class="link-underline">Browse categories &rarr;</a>
+                        <a href="#productsSection" class="btn-primary-market">See what's in stock</a>
+                        <a href="#categoryPills" class="link-underline">Browse categories &rarr;</a>
                     </div>
                 </div>
 
@@ -147,17 +147,17 @@
                 <div class="footer-links">
                     <div class="footer-col">
                         <p class="footer-col-title">Shop</p>
-                        <a href="#">Fashion</a>
-                        <a href="#">Electronics</a>
-                        <a href="#">Beauty</a>
-                        <a href="#">Home &amp; Living</a>
+                        <a href="#categoryPills" data-footer-category="Fashion">Fashion</a>
+                        <a href="#categoryPills" data-footer-category="Electronics">Electronics</a>
+                        <a href="#categoryPills" data-footer-category="Beauty">Beauty</a>
+                        <a href="#categoryPills" data-footer-category="Home &amp; Living">Home &amp; Living</a>
                     </div>
                     <div class="footer-col">
                         <p class="footer-col-title">Help</p>
-                        <a href="#">How it works</a>
-                        <a href="#">Delivery</a>
-                        <a href="#">Track an order</a>
-                        <a href="#">Contact</a>
+                        <a href="#productsSection">How it works</a>
+                        <a href="#productsSection">Delivery</a>
+                        <a href="orders.html">Track an order</a>
+                        <a href="https://wa.me/2347062729106" target="_blank" rel="noopener">Contact</a>
                     </div>
                 </div>
             </div>
@@ -370,6 +370,19 @@
                 activeCategory = this.getAttribute("data-category");
                 categoryFilterActive = !!activeCategory && activeCategory !== "All";
                 filterAndRender(true);
+            });
+        });
+
+        // ===================== FOOTER CATEGORY LINKS =====================
+        document.querySelectorAll("a[data-footer-category]").forEach(function (link) {
+            link.addEventListener("click", function (event) {
+                const targetCategory = this.getAttribute("data-footer-category");
+                const matchingPill = Array.from(document.querySelectorAll("#categoryPills .pill"))
+                    .find(function (p) { return p.getAttribute("data-category") === targetCategory; });
+
+                if (matchingPill) {
+                    matchingPill.click();
+                }
             });
         });
 
