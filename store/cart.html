@@ -351,17 +351,16 @@
                         // response.reference contains the Paystack transaction reference string
                         console.log("Paystack payment successful! Reference:", response.reference);
 
-                        // Update order in Firestore to 'approved' and record the payment reference
+                        // Update order in Firestore with payment reference, keeping status as 'pending' for admin approval
                         db.collection("orders").doc(orderId).update({
-                            status: "approved",
+                            status: "pending",
                             paymentReference: response.reference,
-                            approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+                            paidAt: firebase.firestore.FieldValue.serverTimestamp()
                         }).then(function () {
-                            // Redirect to receipt with approved status!
+                            // Redirect to receipt with pending status!
                             window.location.href = "receipt.html?id=" + orderId;
                         }).catch(function (err) {
-                            console.error("Error updating order after Paystack payment:", err);
-                            window.location.href = "receipt.html?id=" + orderId;
+                            console.error("Error updating order after Paystack payment:", err); window.location.href = "receipt.html?id=" + orderId;
                         });
                     },
                     onClose: function () {
