@@ -30,3 +30,6 @@ firebase.initializeApp(firebaseConfig);
 // Shortcuts every other script uses:
 const auth = firebase.auth();       // authentication (sign up / sign in)
 const db = firebase.firestore();    // database (products, orders, users)
+
+// Paystack Public Key (Replace 'pk_test_placeholder_key' with your actual key from dashboard.paystack.com)
+const PAYSTACK_PUBLIC_KEY = "pk_test_0123456789abcdef0123456789abcdef01234567";
