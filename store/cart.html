@@ -318,13 +318,13 @@
             // Retrieve key from configuration or fallback
             const apiKey = (typeof PAYSTACK_PUBLIC_KEY !== "undefined" && PAYSTACK_PUBLIC_KEY)
                 ? PAYSTACK_PUBLIC_KEY
-                : "pk_test_0123456789abcdef0123456789abcdef01234567";
+                : "pk_test_YOUR_PAYSTACK_PUBLIC_KEY";
 
             // Validate if key is configured properly (placeholder keys or empty/short keys will fail)
-            const isPlaceholderKey = apiKey.includes("0123456789abcdef") || apiKey.includes("placeholder") || !apiKey.startsWith("pk_");
+            const isPlaceholderKey = apiKey.includes("YOUR_PAYSTACK_PUBLIC_KEY") || apiKey.includes("0123456789abcdef") || apiKey.includes("placeholder") || !apiKey.startsWith("pk_") || apiKey.length < 20;
 
             if (isPlaceholderKey) {
-                orderError.textContent = "Paystack payment is not configured yet. Please set a valid Paystack Public Key (starting with 'pk_live_' or 'pk_test_') in shared/js/firebase-config.js.";
+                orderError.textContent = "Paystack payment is not configured yet. Please enter your valid Paystack Public Key (starting with 'pk_test_' or 'pk_live_') in shared/js/firebase-config.js.";
                 orderError.hidden = false;
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 return;

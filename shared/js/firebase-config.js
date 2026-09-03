@@ -31,5 +31,5 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();       // authentication (sign up / sign in)
 const db = firebase.firestore();    // database (products, orders, users)
 
-// Paystack Public Key (Replace 'pk_test_placeholder_key' with your actual key from dashboard.paystack.com)
-const PAYSTACK_PUBLIC_KEY = "pk_test_0123456789abcdef0123456789abcdef01234567";
+// Paystack Public Key (Replace with your actual Paystack Public Key from dashboard.paystack.com, e.g., pk_test_xxxxxx)
+const PAYSTACK_PUBLIC_KEY = "pk_test_YOUR_PAYSTACK_PUBLIC_KEY";
