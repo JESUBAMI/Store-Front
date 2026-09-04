@@ -49,7 +49,7 @@
                 </div>
 
                 <div class="d-flex align-items-center gap-4 justify-content-between justify-content-md-end">
-                    <a href="cart.html" class="nav-icon-btn" aria-label="Cart">
+                    <a href="/store/cart.html" class="nav-icon-btn" aria-label="Cart">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M3 4H5L7.5 15.5C7.6 16.1 8.1 16.5 8.7 16.5H18.3C18.9 16.5 19.4 16.1 19.5 15.5L21 7H6"
@@ -61,7 +61,7 @@
                     </a>
                     <!-- Filled in by JS below: "Sign in" link, or an account dropdown once logged in -->
                     <div id="navUserArea">
-                        <a href="login.html" class="btn-signin">Sign in</a>
+                        <a href="/store/login.html" class="btn-signin">Sign in</a>
                     </div>
                 </div>
 
@@ -156,7 +156,7 @@
                         <p class="footer-col-title">Help</p>
                         <a href="#productsSection">How it works</a>
                         <a href="#productsSection">Delivery</a>
-                        <a href="orders.html">Track an order</a>
+                        <a href="/store/orders.html">Track an order</a>
                         <a href="https://wa.me/2347062729106" target="_blank" rel="noopener">Contact</a>
                     </div>
                 </div>
@@ -415,8 +415,8 @@
                     'Hi, ' + displayName +
                     '</button>' +
                     '<ul class="dropdown-menu dropdown-menu-end nav-account-menu">' +
-                    '<li><a class="dropdown-item" href="account.html">My Account</a></li>' +
-                    '<li><a class="dropdown-item" href="orders.html">Orders</a></li>' +
+                    '<li><a class="dropdown-item" href="/store/account.html">My Account</a></li>' +
+                    '<li><a class="dropdown-item" href="/store/orders.html">Orders</a></li>' +
                     '<li><hr class="dropdown-divider"></li>' +
                     '<li><a class="dropdown-item nav-logout-item" href="#" id="logoutBtn">Logout</a></li>' +
                     '</ul>' +
@@ -426,7 +426,7 @@
                     auth.signOut().then(function () { window.location.href = "index.html"; });
                 });
             } else {
-                area.innerHTML = '<a href="login.html" class="btn-signin">Sign in</a>';
+                area.innerHTML = '<a href="/store/login.html" class="btn-signin">Sign in</a>';
             }
         });
     </script>
