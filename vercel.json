@@ -13,8 +13,16 @@
     ],
     "rewrites": [
         {
-            "source": "/admin/?",
+            "source": "/admin",
             "destination": "/admin/login.html"
+        },
+        {
+            "source": "/admin/dashboard",
+            "destination": "/admin/dashboard.html"
+        },
+        {
+            "source": "/dashboard.html",
+            "destination": "/admin/dashboard.html"
         },
         {
             "source": "/admin/:path*",
