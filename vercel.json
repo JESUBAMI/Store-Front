@@ -1,4 +1,16 @@
 {
+    "redirects": [
+        {
+            "source": "/store/index.html",
+            "destination": "/",
+            "permanent": true
+        },
+        {
+            "source": "/store/index",
+            "destination": "/",
+            "permanent": true
+        }
+    ],
     "rewrites": [
         {
             "source": "/admin",
