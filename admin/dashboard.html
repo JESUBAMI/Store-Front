@@ -53,7 +53,8 @@
                     <div class="card h-100">
                         <div class="card-body">
                             <p class="card-text text-muted mb-1">Total Products</p>
-                            <p class="card-title" style="font-size: 28px; font-weight: bold; color: #1F3A5F;" id="statTotalItems">0</p>
+                            <p class="card-title" style="font-size: 28px; font-weight: bold; color: #1F3A5F;"
+                                id="statTotalItems">0</p>
                         </div>
                     </div>
                 </div>
@@ -61,7 +62,8 @@
                     <div class="card h-100">
                         <div class="card-body">
                             <p class="card-text text-muted mb-1">Items Sold</p>
-                            <p class="card-title" style="font-size: 28px; font-weight: bold; color: #3A6B35;" id="statItemsSold">0</p>
+                            <p class="card-title" style="font-size: 28px; font-weight: bold; color: #3A6B35;"
+                                id="statItemsSold">0</p>
                         </div>
                     </div>
                 </div>
@@ -69,7 +71,8 @@
                     <div class="card h-100">
                         <div class="card-body">
                             <p class="card-text text-muted mb-1">Pending Orders</p>
-                            <p class="card-title" style="font-size: 28px; font-weight: bold; color: #E3A008;" id="statPendingOrders">0</p>
+                            <p class="card-title" style="font-size: 28px; font-weight: bold; color: #E3A008;"
+                                id="statPendingOrders">0</p>
                         </div>
                     </div>
                 </div>
@@ -77,7 +80,8 @@
                     <div class="card h-100">
                         <div class="card-body">
                             <p class="card-text text-muted mb-1">Total Revenue</p>
-                            <p class="card-title" style="font-size: 28px; font-weight: bold; color: #C1440E;" id="statTotalRevenue">₦0</p>
+                            <p class="card-title" style="font-size: 28px; font-weight: bold; color: #C1440E;"
+                                id="statTotalRevenue">₦0</p>
                         </div>
                     </div>
                 </div>
@@ -89,7 +93,8 @@
                     <div class="card">
                         <div class="card-body">
                             <p class="card-text text-muted mb-1">Today's Revenue</p>
-                            <p class="card-title" style="font-size: 24px; font-weight: bold; color: #3A6B35;" id="statTodayRevenue">₦0</p>
+                            <p class="card-title" style="font-size: 24px; font-weight: bold; color: #3A6B35;"
+                                id="statTodayRevenue">₦0</p>
                             <small class="text-muted" id="todayOrderCount">(0 orders)</small>
                         </div>
                     </div>
@@ -98,7 +103,8 @@
                     <div class="card">
                         <div class="card-body">
                             <p class="card-text text-muted mb-1">This Week's Revenue</p>
-                            <p class="card-title" style="font-size: 24px; font-weight: bold; color: #1F3A5F;" id="statWeekRevenue">₦0</p>
+                            <p class="card-title" style="font-size: 24px; font-weight: bold; color: #1F3A5F;"
+                                id="statWeekRevenue">₦0</p>
                             <small class="text-muted" id="weekOrderCount">(0 orders)</small>
                         </div>
                     </div>
@@ -169,6 +175,11 @@
 
     <script>
         // ===================== STAT: TOTAL ITEMS =====================
+
+        function initDashboard() {
+            // Show content only after authentication is confirmed
+            document.getElementById("dashboardContent").style.display = "block";
+        }
         db.collection("products").get().then(function (snapshot) {
             document.getElementById("statTotalItems").textContent = snapshot.size;
         });
@@ -189,7 +200,7 @@
             const days = [];
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            
+
             for (let i = 6; i >= 0; i--) {
                 const d = new Date(today);
                 d.setDate(d.getDate() - i);
@@ -208,7 +219,7 @@
 
                 if (order.data.status === "approved") {
                     totalRevenue += (order.data.total || 0);
-                    
+
                     order.data.items.forEach(function (item) {
                         itemsSold += item.quantity;
                         // Track top products
@@ -221,7 +232,7 @@
                     if (order.data.createdAt) {
                         const orderDate = order.data.createdAt.toDate();
                         const orderDateString = orderDate.toDateString();
-                        
+
                         if (revenueByDay.hasOwnProperty(orderDateString)) {
                             revenueByDay[orderDateString] += order.data.total || 0;
                         }
@@ -342,6 +353,12 @@
                     '</div>' +
                     '</div>';
             }).join("");
+        });
+
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+            auth.signOut().then(() => {
+                window.location.href = "/admin/login.html";
+            });
         });
     </script>
 

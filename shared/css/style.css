@@ -249,14 +249,14 @@ a {
     .category-row {
         padding: 10px 0;
     }
-    
+
     .category-scroll {
         gap: 6px;
         padding: 0 6px;
         justify-content: center;
         flex-wrap: wrap;
     }
-    
+
     .pill {
         padding: 5px 12px;
         font-size: 11px;
@@ -269,14 +269,14 @@ a {
     .category-row {
         padding: 12px 0;
     }
-    
+
     .category-scroll {
         gap: 8px;
         padding: 0 8px;
         justify-content: center;
         flex-wrap: wrap;
     }
-    
+
     .pill {
         padding: 6px 14px;
         font-size: 12px;
@@ -289,13 +289,13 @@ a {
     .category-row {
         padding: 14px 0;
     }
-    
+
     .category-scroll {
         gap: 10px;
         overflow-x: auto;
         flex-wrap: nowrap;
     }
-    
+
     .pill {
         padding: 8px 18px;
         font-size: 13px;
@@ -307,13 +307,13 @@ a {
     .category-row {
         padding: 14px 0;
     }
-    
+
     .category-scroll {
         gap: 10px;
         overflow-x: auto;
         flex-wrap: nowrap;
     }
-    
+
     .pill {
         padding: 8px 18px;
         font-size: 13px;
@@ -538,6 +538,7 @@ a {
     .hero-heading {
         font-size: 30px;
     }
+
     .receipt-card {
         max-width: 260px;
         transform: rotate(-1deg);
@@ -825,7 +826,7 @@ a {
         grid-template-columns: 1fr auto;
     }
 
-    .order-history-row > a {
+    .order-history-row>a {
         grid-column: 1 / -1;
     }
 }
@@ -910,6 +911,7 @@ a {
     .footer-links {
         gap: 32px;
     }
+
     .footer-bottom {
         flex-direction: column;
         gap: 4px;
@@ -995,12 +997,12 @@ a {
     padding: 18px 0;
 }
 
-.order-history-row > div {
+.order-history-row>div {
     display: grid;
     gap: 4px;
 }
 
-.order-history-row > div:nth-child(2) {
+.order-history-row>div:nth-child(2) {
     text-align: right;
 }
 
@@ -1323,6 +1325,8 @@ a {
     color: #1F3A5F;
 }
 
+
+
 /* ===================== DASHBOARD: STATS + CHART ===================== */
 
 .stat-grid {
@@ -1451,12 +1455,19 @@ a {
     color: #3A6B35;
 }
 
+
+/* Hide dashboard content by default */
+#dashboardContent {
+    display: none;
+}
+
 /* --- Responsive: Admin shell --- */
 
 @media (max-width: 768px) {
     .admin-shell {
         flex-direction: column;
     }
+
     .admin-sidebar {
         width: 100%;
         display: flex;
@@ -1464,14 +1475,17 @@ a {
         gap: 16px;
         padding: 14px 20px;
     }
+
     .admin-brand {
         margin-bottom: 0;
     }
+
     .admin-nav {
         flex-direction: row;
         flex-wrap: wrap;
         gap: 8px;
     }
+
     .admin-main {
         padding: 24px 20px;
     }
@@ -1910,8 +1924,15 @@ a {
 }
 
 @keyframes pulse-dot {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
 }
 
 /* --- Responsive: Product detail --- */
