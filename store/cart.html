@@ -315,52 +315,6 @@
           So NGN 5,000 becomes 5,000 * 100 = 500,000 kobo.
         */
         function payWithPaystack(orderId, amountInNaira) {
-<<<<<<< HEAD
-            // Replace 'pk_test_placeholder_key' with your actual Paystack Public Key from dashboard.paystack.com
-            const PAYSTACK_PUBLIC_KEY = "pk_test_0123456789abcdef0123456789abcdef01234567";
-
-            const handler = PaystackPop.setup({
-                key: PAYSTACK_PUBLIC_KEY,
-                email: currentUser.email,
-                amount: Math.round(amountInNaira * 100), // Amount in kobo
-                currency: "NGN",
-                ref: "OJA_" + orderId + "_" + Math.floor((Math.random() * 1000000000) + 1), // Unique transaction reference
-                metadata: {
-                    orderId: orderId,
-                    custom_fields: [
-                        {
-                            display_name: "Order ID",
-                            variable_name: "order_id",
-                            value: orderId
-                        }
-                    ]
-                },
-                callback: function (response) {
-                    // response.reference contains the Paystack transaction reference string
-                    console.log("Paystack payment successful! Reference:", response.reference);
-
-                    // Update order in Firestore with payment reference, keeping status as 'pending' for admin approval
-                    db.collection("orders").doc(orderId).update({
-                        status: "pending",
-                        paymentReference: response.reference,
-                        paidAt: firebase.firestore.FieldValue.serverTimestamp()
-                    }).then(function () {
-                        // Redirect to receipt with pending status!
-                        window.location.href = "receipt.html?id=" + orderId;
-                    }).catch(function (err) {
-                        console.error("Error updating order after Paystack payment:", err);
-                        window.location.href = "receipt.html?id=" + orderId;
-                    });
-                },
-                onClose: function () {
-                    // Triggered when user closes Paystack modal before completing payment
-                    alert("Payment popup closed. You can view your pending order in 'My Orders'.");
-                    window.location.href = "receipt.html?id=" + orderId;
-                }
-            });
-
-            handler.openIframe();
-=======
             // Retrieve key from configuration or fallback
             const apiKey = (typeof PAYSTACK_PUBLIC_KEY !== "undefined" && PAYSTACK_PUBLIC_KEY)
                 ? PAYSTACK_PUBLIC_KEY
@@ -423,7 +377,6 @@
                 orderError.hidden = false;
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
->>>>>>> feature/store-front
         }
 
         render();

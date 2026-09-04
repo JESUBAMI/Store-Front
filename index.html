@@ -1,14 +1,870 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=/store/index.html">
-    <title>Redirecting to Òjà Store...</title>
-    <script>
-        window.location.href = "/store/index.html";
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Òjà — the market</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/shared/css/style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/shared/js/firebase-config.js"></script>
+    <script src="/shared/js/cart.js"></script>
 </head>
+
 <body>
-    <p>Redirecting to store... If you are not redirected automatically, <a href="/store/index.html">click here</a>.</p>
+
+    <!-- ===================== NAVBAR ===================== -->
+    <!-- Note: nothing here ever links to admin/login.html — the admin -->
+    <!-- side is intentionally only reachable via its own direct URL. -->
+    <nav class="navbar navbar-expand-md navbar-market">
+        <div class="container">
+
+            <a class="brand-mark" href="index.html">Ò<span>j</span>à</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent"
+                aria-label="Toggle navigation">
+                <span class="toggler-bar"></span>
+                <span class="toggler-bar"></span>
+                <span class="toggler-bar"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navContent">
+
+                <div class="search-pill mx-md-auto my-3 my-md-0">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="7" cy="7" r="5.5" stroke="#6B7178" stroke-width="1.4" />
+                        <path d="M11.2 11.2L14.5 14.5" stroke="#6B7178" stroke-width="1.4" stroke-linecap="round" />
+                    </svg>
+                    
+                    <input type="text" id="searchInput" placeholder="Search the market..." >
+                </div>
+
+                <div class="d-flex align-items-center gap-4 justify-content-between justify-content-md-end">
+                    <a href="/store/cart.html" class="nav-icon-btn" aria-label="Cart">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M3 4H5L7.5 15.5C7.6 16.1 8.1 16.5 8.7 16.5H18.3C18.9 16.5 19.4 16.1 19.5 15.5L21 7H6"
+                                stroke="#F6F1E7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                            <circle cx="9" cy="20" r="1.4" fill="#F6F1E7" />
+                            <circle cx="18" cy="20" r="1.4" fill="#F6F1E7" />
+                        </svg>
+                        <span class="cart-badge" id="cartBadge">0</span>
+                    </a>
+                    <!-- Filled in by JS below: "Sign in" link, or an account dropdown once logged in -->
+                    <div id="navUserArea">
+                        <a href="/store/login.html" class="btn-signin">Sign in</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===================== CATEGORY PILLS ===================== -->
+    <div class="category-row">
+        <div class="container">
+            <div class="category-scroll" id="categoryPills">
+                <a href="#" data-category="All" class="pill pill-active">All</a>
+                <a href="#" data-category="Fashion" class="pill">Fashion</a>
+                <a href="#" data-category="Phones & Tablets" class="pill">Phones &amp; Tablets</a>
+                <a href="#" data-category="Electronics" class="pill">Electronics</a>
+                <a href="#" data-category="Home & Living" class="pill">Home &amp; Living</a>
+                <a href="#" data-category="Beauty" class="pill">Beauty</a>
+                <a href="#" data-category="Bags & Shoes" class="pill">Bags &amp; Shoes</a>
+                <a href="#" data-category="Groceries" class="pill">Groceries</a>
+                <a href="#" data-category="Kids" class="pill">Kids</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== HERO ===================== -->
+    <section class="hero">
+        <div class="container">
+            <div class="row align-items-center gy-5">
+
+                <div class="col-md-7">
+                    <p class="eyebrow">One seller. No middlemen.</p>
+                    <h1 class="hero-heading">Buy directly from<br>the seller — no <span>wahala</span>.</h1>
+                    <p class="hero-sub">One seller, real stock, and a receipt generated the moment your order is
+                        approved — not after.</p>
+                    <div class="hero-cta">
+                        <a href="#productsSection" class="btn-primary-market">See what's in stock</a>
+                        <a href="#categoryPills" class="link-underline">Browse categories &rarr;</a>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <img src="/images/OJA.png" alt="Featured products on Òjà" class="hero-side-img">
+                    <!-- Decorative receipt mockup — kept here, currently swapped out for the photo above -->
+                    <!-- <div class="receipt-card">
+                        <p class="receipt-brand">ÒJÀ</p>
+                        <p class="receipt-meta">RECEIPT NO. 00482 · TODAY</p>
+                        <div class="receipt-rule"></div>
+                        <div class="receipt-line"><span>1x Ankara Print Shirt</span><span>₦8,500</span></div>
+                        <div class="receipt-line"><span>1x Leather Sandals</span><span>₦12,000</span></div>
+                        <div class="receipt-line"><span>Delivery</span><span>₦1,500</span></div>
+                        <div class="receipt-rule"></div>
+                        <div class="receipt-line receipt-total"><span>TOTAL</span><span>₦22,000</span></div>
+                        <p class="receipt-footer">Generated automatically on payment confirmation.</p>
+                        <span class="receipt-stamp">Approved</span>
+                    </div> -->
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <div class="torn-edge"></div>
+
+    <!-- ===================== PRODUCTS GRID ===================== -->
+    <!-- Filled in by JS below — every card is generated from live Firestore data. -->
+    <section class="products" id="productsSection">
+        <div class="container">
+            <div class="section-head">
+                <h2 class="section-heading">Today's Stock</h2>
+                <p class="section-sub" id="sectionStockCount">Loading items...</p>
+            </div>
+            <div class="product-grid" id="productGrid"></div>
+        </div>
+    </section>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <p class="brand-mark footer-brand-mark">Ò<span>j</span>à</p>
+                    <p class="footer-tagline">One seller. Real stock. No wahala.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <p class="footer-col-title">Shop</p>
+                        <a href="#categoryPills" data-footer-category="Fashion">Fashion</a>
+                        <a href="#categoryPills" data-footer-category="Electronics">Electronics</a>
+                        <a href="#categoryPills" data-footer-category="Beauty">Beauty</a>
+                        <a href="#categoryPills" data-footer-category="Home &amp; Living">Home &amp; Living</a>
+                    </div>
+                    <div class="footer-col">
+                        <p class="footer-col-title">Help</p>
+                        <a href="#productsSection">How it works</a>
+                        <a href="#productsSection">Delivery</a>
+                        <a href="/store/orders.html">Track an order</a>
+                        <a href="https://wa.me/2347062729106" target="_blank" rel="noopener">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copy">&copy; 2026 Òjà. All rights reserved.</p>
+                <p class="footer-credit">Built in Ogbomoso, Nigeria.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ===================== FILTER STATE =====================
+        let allProducts = [];
+        let filteredProducts = [];
+        let activeCategory = "All";
+        let searchTerm = "";
+        let categoryFilterActive = false;
+
+        // ===================== PRODUCT GRID: load + render =====================
+        const productGrid = document.getElementById("productGrid");
+        const sectionStockCount = document.getElementById("sectionStockCount");
+        const swatchColors = ["#E7DCC3", "#D9E3D0", "#EFDCE0", "#DCE6EF", "#E3D5E8", "#D6E0E3", "#E9DFC8", "#DDE5D1"];
+
+        function updateStockCount(total) {
+            sectionStockCount.textContent = total + (total === 1 ? " item available right now" : " items available right now");
+        }
+
+        // ===================== RENDER PRODUCTS FUNCTION =====================
+        function renderProducts(productsToRender) {
+            productGrid.innerHTML = "";
+
+            if (productsToRender.length === 0) {
+                productGrid.innerHTML = "<p>No products found matching your search or category.</p>";
+                return;
+            }
+
+            productsToRender.forEach(function (item, index) {
+                const doc = item.doc;
+                const product = item.data;
+                const isSoldOut = product.quantity <= 0;
+                    const color = swatchColors[index % swatchColors.length];
+
+                    const priceRow = product.discountPrice
+                        ? '<span class="product-price">&#8358;' + product.discountPrice.toLocaleString() + '</span>' +
+                        '<span class="product-price-original">&#8358;' + product.price.toLocaleString() + '</span>' +
+                        '<span class="discount-tag">-' + Math.round((1 - product.discountPrice / product.price) * 100) + '%</span>'
+                        : '<span class="product-price">&#8358;' + product.price.toLocaleString() + '</span>';
+
+                    const stockRow = isSoldOut
+                        ? '<p class="product-stock out-of-stock">Currently unavailable</p>'
+                        : '<p class="product-stock"><span class="stock-dot"></span>' + product.quantity + ' in stock</p>';
+
+                    const imageInner = product.photoUrl
+                        ? '<img src="' + product.photoUrl + '" alt="' + product.name + '">'
+                        : '<span class="product-image-label">' + (product.category || "Product") + '</span>';
+                    const imageStyle = product.photoUrl ? "" : "background-color:" + color + ";";
+
+                    const card = document.createElement("article");
+                    card.className = isSoldOut ? "product-card sold-out" : "product-card";
+                    
+                    // Build card HTML (without button)
+                    let cardHTML = (isSoldOut ? '<span class="sold-out-tag">Sold out</span>' : '') +
+                        '<div class="product-image" style="' + imageStyle + '">' +
+                        imageInner +
+                        '</div>' +
+                        '<div class="product-body">' +
+                        '<p class="product-title">' + product.name + '</p>' +
+                        '<div class="product-price-row">' + priceRow + '</div>' +
+                        stockRow;
+                    
+                    card.innerHTML = cardHTML + '</div>';
+                    
+                    // Create and append button separately
+                    const button = document.createElement("button");
+                    button.className = "btn-order add-to-cart-btn";
+                    button.textContent = "Add to cart";
+                    button.dataset.id = doc.id || "";
+                    button.dataset.name = product.name || "Product";
+                    button.dataset.price = (product.discountPrice || product.price || 0).toString();
+                    if (isSoldOut) button.disabled = true;
+                    
+                    card.querySelector(".product-body").appendChild(button);
+                    productGrid.appendChild(card);
+            });
+        }
+
+        // ===================== FILTER PRODUCTS FUNCTION =====================
+        function filterAndRender(scrollToProducts) {
+            filteredProducts = allProducts.filter(function (item) {
+                const product = item.data;
+
+                let matchesCategory = true;
+                if (categoryFilterActive && activeCategory && activeCategory !== "All") {
+                    const productCategory = (product.category || "").trim();
+                    const activeCateg = (activeCategory || "").trim();
+                    matchesCategory = productCategory.toLowerCase() === activeCateg.toLowerCase();
+                }
+
+                const matchesSearch = searchTerm === "" ||
+                    (product.name && product.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                    (product.category && product.category.toLowerCase().includes(searchTerm.toLowerCase()));
+
+                return matchesCategory && matchesSearch;
+            });
+
+            renderProducts(filteredProducts);
+
+            if (scrollToProducts) {
+                document.getElementById("productsSection").scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }
+
+        // ===================== ADD TO CART: listen for button clicks =====================
+        document.addEventListener("click", function (event) {
+            if (event.target.classList.contains("add-to-cart-btn")) {
+                // Check if user is logged in
+                if (!auth.currentUser) {
+                    alert("Please sign in to add items to your cart.");
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                // Get product details from button dataset
+                let productId = event.target.dataset.id;
+                let productName = event.target.dataset.name || "Product";
+                let productPrice = parseFloat(event.target.dataset.price);
+
+                console.log("Button dataset values:", { 
+                    dataId: event.target.dataset.id,
+                    dataName: event.target.dataset.name, 
+                    dataPrice: event.target.dataset.price,
+                    parsedPrice: productPrice
+                });
+
+                // Validate price
+                if (isNaN(productPrice) || productPrice <= 0) {
+                    console.error("Invalid price:", productPrice);
+                    productPrice = 0;
+                }
+
+                // Add to cart as a single object
+                addToCart({
+                    id: productId,
+                    name: productName,
+                    price: productPrice,
+                    quantity: 1
+                });
+                
+                console.log("Added to cart:", { productId, productName, productPrice });
+                
+                // Update cart badge
+                document.getElementById("cartBadge").textContent = getCartCount();
+                
+                // Show feedback
+                event.target.textContent = "Added ✓";
+                event.target.disabled = true;
+                setTimeout(function () {
+                    event.target.textContent = "Add to cart";
+                    event.target.disabled = false;
+                }, 2000);
+            }
+        });
+
+        // ===================== LOAD PRODUCTS FROM FIRESTORE =====================
+        db.collection("products").orderBy("createdAt", "desc").get()
+            .then(function (snapshot) {
+                updateStockCount(snapshot.size);
+
+                if (snapshot.empty) {
+                    productGrid.innerHTML = "<p>No products yet — check back soon.</p>";
+                    return;
+                }
+
+                // Store all products with their doc reference
+                snapshot.docs.forEach(function (doc) {
+                    allProducts.push({
+                        doc: doc,
+                        data: doc.data()
+                    });
+                });
+
+                // Initial render with default All view
+                filterAndRender(false);
+            })
+            .catch(function (error) {
+                const message = error.code === "permission-denied"
+                    ? "Firestore blocked this read — check your security rules."
+                    : "Could not load products right now.";
+                productGrid.innerHTML = "<p>" + message + "</p>";
+            });
+
+        // ===================== SEARCH INPUT: listen for changes =====================
+        document.getElementById("searchInput").addEventListener("input", function (event) {
+            searchTerm = event.target.value.trim();
+            filterAndRender(true);
+        });
+
+        // ===================== CATEGORY PILLS: listen for clicks =====================
+        document.querySelectorAll("#categoryPills .pill").forEach(function (pill) {
+            pill.addEventListener("click", function (event) {
+                event.preventDefault();
+
+                document.querySelectorAll("#categoryPills .pill").forEach(function (p) {
+                    p.classList.remove("pill-active");
+                });
+
+                this.classList.add("pill-active");
+
+                activeCategory = this.getAttribute("data-category");
+                categoryFilterActive = !!activeCategory && activeCategory !== "All";
+                filterAndRender(true);
+            });
+        });
+
+        // ===================== FOOTER CATEGORY LINKS =====================
+        document.querySelectorAll("a[data-footer-category]").forEach(function (link) {
+            link.addEventListener("click", function (event) {
+                const targetCategory = this.getAttribute("data-footer-category");
+                const matchingPill = Array.from(document.querySelectorAll("#categoryPills .pill"))
+                    .find(function (p) { return p.getAttribute("data-category") === targetCategory; });
+
+                if (matchingPill) {
+                    matchingPill.click();
+                }
+            });
+        });
+
+        // ===================== NAVBAR: make sticky after category pills =====================
+        const navbar = document.querySelector(".navbar-market");
+        const categoryRow = document.querySelector(".category-row");
+        
+        window.addEventListener("scroll", function () {
+            const categoryRowBottom = categoryRow.getBoundingClientRect().bottom;
+            if (categoryRowBottom <= 0) {
+                navbar.classList.add("sticky-active");
+                document.body.classList.add("navbar-sticky");
+            } else {
+                navbar.classList.remove("sticky-active");
+                document.body.classList.remove("navbar-sticky");
+            }
+        });
+
+        // ===================== NAVBAR: cart badge =====================
+        document.getElementById("cartBadge").textContent = getCartCount();
+
+        // ===================== NAVBAR: signed-in account area =====================
+        auth.onAuthStateChanged(function (user) {
+            const area = document.getElementById("navUserArea");
+            if (user) {
+                const displayName = user.displayName || user.email.split("@")[0];
+                area.innerHTML =
+                    '<div class="dropdown nav-account-dropdown">' +
+                    '<button class="btn-account-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">' +
+                    'Hi, ' + displayName +
+                    '</button>' +
+                    '<ul class="dropdown-menu dropdown-menu-end nav-account-menu">' +
+                    '<li><a class="dropdown-item" href="/store/account.html">My Account</a></li>' +
+                    '<li><a class="dropdown-item" href="/store/orders.html">Orders</a></li>' +
+                    '<li><hr class="dropdown-divider"></li>' +
+                    '<li><a class="dropdown-item nav-logout-item" href="#" id="logoutBtn">Logout</a></li>' +
+                    '</ul>' +
+                    '</div>';
+                document.getElementById("logoutBtn").addEventListener("click", function (event) {
+                    event.preventDefault();
+                    auth.signOut().then(function () { window.location.href = "index.html"; });
+                });
+            } else {
+                area.innerHTML = '<a href="/store/login.html" class="btn-signin">Sign in</a>';
+            }
+        });
+    </script>
 </body>
+
+</html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Òjà — the market</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../shared/css/style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="../shared/js/firebase-config.js"></script>
+    <script src="../shared/js/cart.js"></script>
+</head>
+
+<body>
+
+    <!-- ===================== NAVBAR ===================== -->
+    <!-- Note: nothing here ever links to admin/login.html — the admin -->
+    <!-- side is intentionally only reachable via its own direct URL. -->
+    <nav class="navbar navbar-expand-md navbar-market">
+        <div class="container">
+
+            <a class="brand-mark" href="index.html">Ò<span>j</span>à</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent"
+                aria-label="Toggle navigation">
+                <span class="toggler-bar"></span>
+                <span class="toggler-bar"></span>
+                <span class="toggler-bar"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navContent">
+
+                <div class="search-pill mx-md-auto my-3 my-md-0">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="7" cy="7" r="5.5" stroke="#6B7178" stroke-width="1.4" />
+                        <path d="M11.2 11.2L14.5 14.5" stroke="#6B7178" stroke-width="1.4" stroke-linecap="round" />
+                    </svg>
+                    
+                    <input type="text" id="searchInput" placeholder="Search the market..." >
+                </div>
+
+                <div class="d-flex align-items-center gap-4 justify-content-between justify-content-md-end">
+                    <a href="cart.html" class="nav-icon-btn" aria-label="Cart">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M3 4H5L7.5 15.5C7.6 16.1 8.1 16.5 8.7 16.5H18.3C18.9 16.5 19.4 16.1 19.5 15.5L21 7H6"
+                                stroke="#F6F1E7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                            <circle cx="9" cy="20" r="1.4" fill="#F6F1E7" />
+                            <circle cx="18" cy="20" r="1.4" fill="#F6F1E7" />
+                        </svg>
+                        <span class="cart-badge" id="cartBadge">0</span>
+                    </a>
+                    <!-- Filled in by JS below: "Sign in" link, or an account dropdown once logged in -->
+                    <div id="navUserArea">
+                        <a href="login.html" class="btn-signin">Sign in</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===================== CATEGORY PILLS ===================== -->
+    <div class="category-row">
+        <div class="container">
+            <div class="category-scroll" id="categoryPills">
+                <a href="#" data-category="All" class="pill pill-active">All</a>
+                <a href="#" data-category="Fashion" class="pill">Fashion</a>
+                <a href="#" data-category="Phones & Tablets" class="pill">Phones &amp; Tablets</a>
+                <a href="#" data-category="Electronics" class="pill">Electronics</a>
+                <a href="#" data-category="Home & Living" class="pill">Home &amp; Living</a>
+                <a href="#" data-category="Beauty" class="pill">Beauty</a>
+                <a href="#" data-category="Bags & Shoes" class="pill">Bags &amp; Shoes</a>
+                <a href="#" data-category="Groceries" class="pill">Groceries</a>
+                <a href="#" data-category="Kids" class="pill">Kids</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== HERO ===================== -->
+    <section class="hero">
+        <div class="container">
+            <div class="row align-items-center gy-5">
+
+                <div class="col-md-7">
+                    <p class="eyebrow">One seller. No middlemen.</p>
+                    <h1 class="hero-heading">Buy directly from<br>the seller — no <span>wahala</span>.</h1>
+                    <p class="hero-sub">One seller, real stock, and a receipt generated the moment your order is
+                        approved — not after.</p>
+                    <div class="hero-cta">
+                        <a href="#productsSection" class="btn-primary-market">See what's in stock</a>
+                        <a href="#categoryPills" class="link-underline">Browse categories &rarr;</a>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <img src="/images/OJA.png" alt="Featured products on Òjà" class="hero-side-img">
+                    <!-- Decorative receipt mockup — kept here, currently swapped out for the photo above -->
+                    <!-- <div class="receipt-card">
+                        <p class="receipt-brand">ÒJÀ</p>
+                        <p class="receipt-meta">RECEIPT NO. 00482 · TODAY</p>
+                        <div class="receipt-rule"></div>
+                        <div class="receipt-line"><span>1x Ankara Print Shirt</span><span>₦8,500</span></div>
+                        <div class="receipt-line"><span>1x Leather Sandals</span><span>₦12,000</span></div>
+                        <div class="receipt-line"><span>Delivery</span><span>₦1,500</span></div>
+                        <div class="receipt-rule"></div>
+                        <div class="receipt-line receipt-total"><span>TOTAL</span><span>₦22,000</span></div>
+                        <p class="receipt-footer">Generated automatically on payment confirmation.</p>
+                        <span class="receipt-stamp">Approved</span>
+                    </div> -->
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <div class="torn-edge"></div>
+
+    <!-- ===================== PRODUCTS GRID ===================== -->
+    <!-- Filled in by JS below — every card is generated from live Firestore data. -->
+    <section class="products" id="productsSection">
+        <div class="container">
+            <div class="section-head">
+                <h2 class="section-heading">Today's Stock</h2>
+                <p class="section-sub" id="sectionStockCount">Loading items...</p>
+            </div>
+            <div class="product-grid" id="productGrid"></div>
+        </div>
+    </section>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <p class="brand-mark footer-brand-mark">Ò<span>j</span>à</p>
+                    <p class="footer-tagline">One seller. Real stock. No wahala.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <p class="footer-col-title">Shop</p>
+                        <a href="#categoryPills" data-footer-category="Fashion">Fashion</a>
+                        <a href="#categoryPills" data-footer-category="Electronics">Electronics</a>
+                        <a href="#categoryPills" data-footer-category="Beauty">Beauty</a>
+                        <a href="#categoryPills" data-footer-category="Home &amp; Living">Home &amp; Living</a>
+                    </div>
+                    <div class="footer-col">
+                        <p class="footer-col-title">Help</p>
+                        <a href="#productsSection">How it works</a>
+                        <a href="#productsSection">Delivery</a>
+                        <a href="orders.html">Track an order</a>
+                        <a href="https://wa.me/2347062729106" target="_blank" rel="noopener">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copy">&copy; 2026 Òjà. All rights reserved.</p>
+                <p class="footer-credit">Built in Ogbomoso, Nigeria.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ===================== FILTER STATE =====================
+        let allProducts = [];
+        let filteredProducts = [];
+        let activeCategory = "All";
+        let searchTerm = "";
+        let categoryFilterActive = false;
+
+        // ===================== PRODUCT GRID: load + render =====================
+        const productGrid = document.getElementById("productGrid");
+        const sectionStockCount = document.getElementById("sectionStockCount");
+        const swatchColors = ["#E7DCC3", "#D9E3D0", "#EFDCE0", "#DCE6EF", "#E3D5E8", "#D6E0E3", "#E9DFC8", "#DDE5D1"];
+
+        function updateStockCount(total) {
+            sectionStockCount.textContent = total + (total === 1 ? " item available right now" : " items available right now");
+        }
+
+        // ===================== RENDER PRODUCTS FUNCTION =====================
+        function renderProducts(productsToRender) {
+            productGrid.innerHTML = "";
+
+            if (productsToRender.length === 0) {
+                productGrid.innerHTML = "<p>No products found matching your search or category.</p>";
+                return;
+            }
+
+            productsToRender.forEach(function (item, index) {
+                const doc = item.doc;
+                const product = item.data;
+                const isSoldOut = product.quantity <= 0;
+                    const color = swatchColors[index % swatchColors.length];
+
+                    const priceRow = product.discountPrice
+                        ? '<span class="product-price">&#8358;' + product.discountPrice.toLocaleString() + '</span>' +
+                        '<span class="product-price-original">&#8358;' + product.price.toLocaleString() + '</span>' +
+                        '<span class="discount-tag">-' + Math.round((1 - product.discountPrice / product.price) * 100) + '%</span>'
+                        : '<span class="product-price">&#8358;' + product.price.toLocaleString() + '</span>';
+
+                    const stockRow = isSoldOut
+                        ? '<p class="product-stock out-of-stock">Currently unavailable</p>'
+                        : '<p class="product-stock"><span class="stock-dot"></span>' + product.quantity + ' in stock</p>';
+
+                    const imageInner = product.photoUrl
+                        ? '<img src="' + product.photoUrl + '" alt="' + product.name + '">'
+                        : '<span class="product-image-label">' + (product.category || "Product") + '</span>';
+                    const imageStyle = product.photoUrl ? "" : "background-color:" + color + ";";
+
+                    const card = document.createElement("article");
+                    card.className = isSoldOut ? "product-card sold-out" : "product-card";
+                    
+                    // Build card HTML (without button)
+                    let cardHTML = (isSoldOut ? '<span class="sold-out-tag">Sold out</span>' : '') +
+                        '<div class="product-image" style="' + imageStyle + '">' +
+                        imageInner +
+                        '</div>' +
+                        '<div class="product-body">' +
+                        '<p class="product-title">' + product.name + '</p>' +
+                        '<div class="product-price-row">' + priceRow + '</div>' +
+                        stockRow;
+                    
+                    card.innerHTML = cardHTML + '</div>';
+                    
+                    // Create and append button separately
+                    const button = document.createElement("button");
+                    button.className = "btn-order add-to-cart-btn";
+                    button.textContent = "Add to cart";
+                    button.dataset.id = doc.id || "";
+                    button.dataset.name = product.name || "Product";
+                    button.dataset.price = (product.discountPrice || product.price || 0).toString();
+                    if (isSoldOut) button.disabled = true;
+                    
+                    card.querySelector(".product-body").appendChild(button);
+                    productGrid.appendChild(card);
+            });
+        }
+
+        // ===================== FILTER PRODUCTS FUNCTION =====================
+        function filterAndRender(scrollToProducts) {
+            filteredProducts = allProducts.filter(function (item) {
+                const product = item.data;
+
+                let matchesCategory = true;
+                if (categoryFilterActive && activeCategory && activeCategory !== "All") {
+                    const productCategory = (product.category || "").trim();
+                    const activeCateg = (activeCategory || "").trim();
+                    matchesCategory = productCategory.toLowerCase() === activeCateg.toLowerCase();
+                }
+
+                const matchesSearch = searchTerm === "" ||
+                    (product.name && product.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                    (product.category && product.category.toLowerCase().includes(searchTerm.toLowerCase()));
+
+                return matchesCategory && matchesSearch;
+            });
+
+            renderProducts(filteredProducts);
+
+            if (scrollToProducts) {
+                document.getElementById("productsSection").scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }
+
+        // ===================== ADD TO CART: listen for button clicks =====================
+        document.addEventListener("click", function (event) {
+            if (event.target.classList.contains("add-to-cart-btn")) {
+                // Check if user is logged in
+                if (!auth.currentUser) {
+                    alert("Please sign in to add items to your cart.");
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                // Get product details from button dataset
+                let productId = event.target.dataset.id;
+                let productName = event.target.dataset.name || "Product";
+                let productPrice = parseFloat(event.target.dataset.price);
+
+                console.log("Button dataset values:", { 
+                    dataId: event.target.dataset.id,
+                    dataName: event.target.dataset.name, 
+                    dataPrice: event.target.dataset.price,
+                    parsedPrice: productPrice
+                });
+
+                // Validate price
+                if (isNaN(productPrice) || productPrice <= 0) {
+                    console.error("Invalid price:", productPrice);
+                    productPrice = 0;
+                }
+
+                // Add to cart as a single object
+                addToCart({
+                    id: productId,
+                    name: productName,
+                    price: productPrice,
+                    quantity: 1
+                });
+                
+                console.log("Added to cart:", { productId, productName, productPrice });
+                
+                // Update cart badge
+                document.getElementById("cartBadge").textContent = getCartCount();
+                
+                // Show feedback
+                event.target.textContent = "Added ✓";
+                event.target.disabled = true;
+                setTimeout(function () {
+                    event.target.textContent = "Add to cart";
+                    event.target.disabled = false;
+                }, 2000);
+            }
+        });
+
+        // ===================== LOAD PRODUCTS FROM FIRESTORE =====================
+        db.collection("products").orderBy("createdAt", "desc").get()
+            .then(function (snapshot) {
+                updateStockCount(snapshot.size);
+
+                if (snapshot.empty) {
+                    productGrid.innerHTML = "<p>No products yet — check back soon.</p>";
+                    return;
+                }
+
+                // Store all products with their doc reference
+                snapshot.docs.forEach(function (doc) {
+                    allProducts.push({
+                        doc: doc,
+                        data: doc.data()
+                    });
+                });
+
+                // Initial render with default All view
+                filterAndRender(false);
+            })
+            .catch(function (error) {
+                const message = error.code === "permission-denied"
+                    ? "Firestore blocked this read — check your security rules."
+                    : "Could not load products right now.";
+                productGrid.innerHTML = "<p>" + message + "</p>";
+            });
+
+        // ===================== SEARCH INPUT: listen for changes =====================
+        document.getElementById("searchInput").addEventListener("input", function (event) {
+            searchTerm = event.target.value.trim();
+            filterAndRender(true);
+        });
+
+        // ===================== CATEGORY PILLS: listen for clicks =====================
+        document.querySelectorAll("#categoryPills .pill").forEach(function (pill) {
+            pill.addEventListener("click", function (event) {
+                event.preventDefault();
+
+                document.querySelectorAll("#categoryPills .pill").forEach(function (p) {
+                    p.classList.remove("pill-active");
+                });
+
+                this.classList.add("pill-active");
+
+                activeCategory = this.getAttribute("data-category");
+                categoryFilterActive = !!activeCategory && activeCategory !== "All";
+                filterAndRender(true);
+            });
+        });
+
+        // ===================== FOOTER CATEGORY LINKS =====================
+        document.querySelectorAll("a[data-footer-category]").forEach(function (link) {
+            link.addEventListener("click", function (event) {
+                const targetCategory = this.getAttribute("data-footer-category");
+                const matchingPill = Array.from(document.querySelectorAll("#categoryPills .pill"))
+                    .find(function (p) { return p.getAttribute("data-category") === targetCategory; });
+
+                if (matchingPill) {
+                    matchingPill.click();
+                }
+            });
+        });
+
+        // ===================== NAVBAR: make sticky after category pills =====================
+        const navbar = document.querySelector(".navbar-market");
+        const categoryRow = document.querySelector(".category-row");
+        
+        window.addEventListener("scroll", function () {
+            const categoryRowBottom = categoryRow.getBoundingClientRect().bottom;
+            if (categoryRowBottom <= 0) {
+                navbar.classList.add("sticky-active");
+                document.body.classList.add("navbar-sticky");
+            } else {
+                navbar.classList.remove("sticky-active");
+                document.body.classList.remove("navbar-sticky");
+            }
+        });
+
+        // ===================== NAVBAR: cart badge =====================
+        document.getElementById("cartBadge").textContent = getCartCount();
+
+        // ===================== NAVBAR: signed-in account area =====================
+        auth.onAuthStateChanged(function (user) {
+            const area = document.getElementById("navUserArea");
+            if (user) {
+                const displayName = user.displayName || user.email.split("@")[0];
+                area.innerHTML =
+                    '<div class="dropdown nav-account-dropdown">' +
+                    '<button class="btn-account-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">' +
+                    'Hi, ' + displayName +
+                    '</button>' +
+                    '<ul class="dropdown-menu dropdown-menu-end nav-account-menu">' +
+                    '<li><a class="dropdown-item" href="account.html">My Account</a></li>' +
+                    '<li><a class="dropdown-item" href="orders.html">Orders</a></li>' +
+                    '<li><hr class="dropdown-divider"></li>' +
+                    '<li><a class="dropdown-item nav-logout-item" href="#" id="logoutBtn">Logout</a></li>' +
+                    '</ul>' +
+                    '</div>';
+                document.getElementById("logoutBtn").addEventListener("click", function (event) {
+                    event.preventDefault();
+                    auth.signOut().then(function () { window.location.href = "index.html"; });
+                });
+            } else {
+                area.innerHTML = '<a href="login.html" class="btn-signin">Sign in</a>';
+            }
+        });
+    </script>
+</body>
+
 </html>

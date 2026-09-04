@@ -1,10 +1,28 @@
 {
-  "version": 2,
-  "cleanUrls": true,
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/store/index.html"
-    }
-  ]
+    "rewrites": [
+        {
+            "source": "/admin",
+            "destination": "/admin/login.html"
+        },
+        {
+            "source": "/admin/:path*",
+            "destination": "/admin/:path*"
+        },
+        {
+            "source": "/store/:path*",
+            "destination": "/store/:path*"
+        },
+        {
+            "source": "/shared/:path*",
+            "destination": "/shared/:path*"
+        },
+        {
+            "source": "/images/:path*",
+            "destination": "/images/:path*"
+        },
+        {
+            "source": "/((?!admin|store|shared|images).*)",
+            "destination": "/index.html"
+        }
+    ]
 }
