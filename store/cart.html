@@ -298,29 +298,13 @@
         }
 
         // ===================== PAYSTACK INTEGRATION FOR BEGINNERS =====================
-        /*
-          WHAT IS PAYSTACK?
-          Paystack is a payment gateway that allows online businesses to receive payments safely
-          via Debit Cards (Visa/Mastercard/Verve), USSD codes, Bank Transfers, and Mobile Money.
 
-          HOW DOES THIS INLINE POP-UP WORK?
-          1. We pass options (Public Key, Customer Email, Amount in Kobo, Reference ID) to `PaystackPop.setup()`.
-          2. We call handler `.openIframe()` to pop up Paystack's secure modal over our website.
-          3. When the customer finishes paying successfully, Paystack fires the `callback` function.
-          4. Inside `callback`, we update our order status in Firestore from "pending" to "approved".
-          5. If the customer closes the payment popup without paying, `onClose` is triggered.
-
-          NOTE ON CURRENCY:
-          Paystack processes Nigerian Naira (NGN) amounts in **kobo** (1 NGN = 100 kobo).
-          So NGN 5,000 becomes 5,000 * 100 = 500,000 kobo.
-        */
         function payWithPaystack(orderId, amountInNaira) {
             // Retrieve key from configuration or fallback
             const apiKey = (typeof PAYSTACK_PUBLIC_KEY !== "undefined" && PAYSTACK_PUBLIC_KEY)
                 ? PAYSTACK_PUBLIC_KEY
                 : "pk_test_13b81a13a072c75675a757c317c9c78e26bee02f";
 
-            // Validate if key is configured properly (placeholder keys or empty/short keys will fail)
             const isPlaceholderKey = apiKey.includes("YOUR_PAYSTACK_PUBLIC_KEY") || apiKey.includes("0123456789abcdef") || apiKey.includes("placeholder") || !apiKey.startsWith("pk_") || apiKey.length < 20;
 
             if (isPlaceholderKey) {
@@ -334,9 +318,9 @@
                 const handler = PaystackPop.setup({
                     key: apiKey,
                     email: currentUser.email,
-                    amount: Math.round(amountInNaira * 100), // Amount in kobo
+                    amount: Math.round(amountInNaira * 100), 
                     currency: "NGN",
-                    ref: "OJA_" + orderId + "_" + Math.floor((Math.random() * 1000000000) + 1), // Unique transaction reference
+                    ref: "OJA_" + orderId + "_" + Math.floor((Math.random() * 1000000000) + 1), 
                     metadata: {
                         orderId: orderId,
                         custom_fields: [

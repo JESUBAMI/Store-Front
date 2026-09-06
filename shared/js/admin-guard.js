@@ -1,7 +1,3 @@
-// Admin route guard — load this AFTER firebase-config.js on every admin page
-// (dashboard, add-product, products, orders). Kicks out anyone not signed in,
-// or signed in but not tagged role: "admin" in Firestore.
-// Admin route guard – load AFTER firebase-config.js on every admin page
 auth.onAuthStateChanged((user) => {
     if (!user) {
         // 1. Kick out anyone not signed in

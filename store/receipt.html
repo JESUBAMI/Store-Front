@@ -66,7 +66,6 @@
     </nav>
 
     <!-- ===================== RECEIPT ===================== -->
-    <!-- Filled in by loadReceipt() below, based on the ?id= in the URL. -->
     <section class="receipt-page">
         <div class="container">
             <div class="receipt-page-inner" id="receiptContainer">
@@ -114,8 +113,6 @@
                         ? "Payment confirmed. Thank you for shopping with us."
                         : "Waiting for the seller to confirm your payment.";
 
-                    // Bank details only show right after choosing Bank Transfer,
-                    // and only while the order is still pending.
                     const showBankDetails = params.get("showBankDetails") === "1" && order.paymentMethod === "bank" && !isApproved;
 
                     const bankPanel = showBankDetails

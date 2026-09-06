@@ -266,7 +266,7 @@
 
             // --- Build the bar chart ---
             const values = days.map(function (d) { return revenueByDay[d.toDateString()]; });
-            const maxValue = Math.max.apply(null, values.concat([1])); // avoid divide-by-zero on an empty week
+            const maxValue = Math.max.apply(null, values.concat([1])); 
 
             let bars = "";
             let labels = "";
