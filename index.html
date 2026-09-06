@@ -414,13 +414,28 @@
                     '<button class="btn-account-toggle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">' +
                     'Hi, ' + displayName +
                     '</button>' +
-                    '<ul class="dropdown-menu dropdown-menu-end nav-account-menu">' +
+                    '<ul class="dropdown-menu dropdown-menu-end nav-account-menu" id="navAccountMenuList">' +
                     '<li><a class="dropdown-item" href="/store/account.html">My Account</a></li>' +
                     '<li><a class="dropdown-item" href="/store/orders.html">Orders</a></li>' +
                     '<li><hr class="dropdown-divider"></li>' +
                     '<li><a class="dropdown-item nav-logout-item" href="#" id="logoutBtn">Logout</a></li>' +
                     '</ul>' +
                     '</div>';
+
+                // Check if signed in user has admin role
+                db.collection("users").doc(user.uid).get().then(function (doc) {
+                    if (doc.exists && doc.data().role === "admin") {
+                        const menuList = document.getElementById("navAccountMenuList");
+                        if (menuList) {
+                            const adminItem = document.createElement("li");
+                            adminItem.innerHTML = '<a class="dropdown-item" href="/admin/dashboard.html">Admin Dashboard</a>';
+                            menuList.insertBefore(adminItem, menuList.querySelector("hr.dropdown-divider").closest("li"));
+                        }
+                    }
+                }).catch(function (err) {
+                    console.log("Error checking user role:", err);
+                });
+
                 document.getElementById("logoutBtn").addEventListener("click", function (event) {
                     event.preventDefault();
                     auth.signOut().then(function () { window.location.href = "index.html"; });

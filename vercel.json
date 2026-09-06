@@ -13,6 +13,18 @@
     ],
     "rewrites": [
         {
+            "source": "/7",
+            "destination": "/admin/login.html"
+        },
+        {
+            "source": "/a",
+            "destination": "/admin/login.html"
+        },
+        {
+            "source": "/portal",
+            "destination": "/admin/login.html"
+        },
+        {
             "source": "/admin",
             "destination": "/admin/login.html"
         },
