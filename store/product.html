@@ -105,7 +105,7 @@
                     '</div>';
                 document.getElementById("logoutBtn").addEventListener("click", function (event) {
                     event.preventDefault();
-                    auth.signOut().then(function () { window.location.href = "index.html"; });
+                    auth.signOut().then(function () { window.location.href = "../index.html"; });
                 });
             } else {
                 area.innerHTML = '<a href="login.html" class="btn-signin">Sign in</a>';
@@ -181,7 +181,7 @@
                         '</div>' +
                         '<div class="detail-actions">' +
                         orderButton +
-                        '<a href="index.html" class="detail-secondary-link">Continue shopping</a>' +
+                        '<a href="../index.html" class="detail-secondary-link">Continue shopping</a>' +
                         '</div>' +
                         '<div id="liveViewersBox"></div>' +
                         '<div class="detail-benefits">' +
